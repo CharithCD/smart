@@ -32,7 +32,10 @@ export function CompanyList({ companies }: Props) {
         {companies.map((company) => (
           <TableRow key={company.id}>
             <TableCell>
-              <Link href={`/companies/${company.id}`} className="font-medium underline">
+              <Link
+                href={`/companies/${company.id}`}
+                className="font-medium underline pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center"
+              >
                 {company.name}
               </Link>
             </TableCell>

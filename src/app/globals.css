@@ -165,4 +165,21 @@
   html {
     @apply font-sans;
   }
+
+  /* shadcn controls are 32px, which is fine with a mouse but under the 44px finger-sized
+     minimum. On touch screens only, every button, field and menu item grows to 44px.
+     Buttons are matched by data-variant + data-size because a Button inside a trigger
+     (menu, dialog) gets the trigger's data-slot instead of "button". */
+  @media (pointer: coarse) {
+    [data-variant][data-size],
+    [data-slot="input"],
+    [data-slot="select-trigger"],
+    [data-slot="dropdown-menu-item"] {
+      min-height: 2.75rem;
+    }
+
+    [data-variant][data-size] {
+      min-width: 2.75rem;
+    }
+  }
 }
