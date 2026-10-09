@@ -75,13 +75,19 @@ model Verification {
 }
 
 model Company {
-  id        String   @id @default(cuid())
-  ownerId   String
-  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  name      String
-  stage     String // id from features/profile/options.ts
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  ownerId         String
+  owner           User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name            String
+  // Choice fields store ids from features/profile/options.ts
+  stage           String
+  productType     String
+  operatingMode   String
+  industry        String?
+  geographicFocus String?
+  budgetLkr       Int?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@index([ownerId])
 }
