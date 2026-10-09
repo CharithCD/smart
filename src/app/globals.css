@@ -102,8 +102,9 @@
   --accent-foreground: var(--color-lilac-400);
   --destructive: oklch(0.577 0.245 27.325);
   --border: var(--color-neutral-300);
-  --input: var(--color-neutral-300);
-  --ring: var(--color-lilac-300);
+  /* Field edges and focus need 3:1 against white (WCAG 1.4.11); --border stays light for dividers */
+  --input: var(--color-neutral-550);
+  --ring: var(--color-lilac-400);
   --chart-1: var(--color-lilac-400);
   --chart-2: var(--color-lime-300);
   --chart-3: var(--color-blue-300);
@@ -117,7 +118,7 @@
   --sidebar-accent: var(--color-lilac-50);
   --sidebar-accent-foreground: var(--color-lilac-400);
   --sidebar-border: var(--color-neutral-300);
-  --sidebar-ring: var(--color-lilac-300);
+  --sidebar-ring: var(--color-lilac-400);
 }
 
 .dark {

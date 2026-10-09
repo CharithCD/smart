@@ -27,7 +27,7 @@ export function AppSidebar({ companies, children }: Props) {
       </Link>
 
       <nav className="flex flex-col gap-1">
-        <p className="mb-1 px-4 py-2 text-xs font-bold tracking-wider text-neutral-400 uppercase">
+        <p className="mb-1 px-4 py-2 text-xs font-bold tracking-wider text-neutral-600 uppercase">
           My companies
         </p>
         {companies.map((company) => {
@@ -60,8 +60,8 @@ export function AppSidebar({ companies, children }: Props) {
           className={cn(
             "mt-2 flex items-center gap-3 rounded-xl border border-dashed px-4 py-3 text-sm font-semibold transition-colors",
             pathname === "/companies/new"
-              ? "border-neutral-400 bg-neutral-50 text-neutral-900"
-              : "border-neutral-300 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900",
+              ? "border-neutral-600 bg-neutral-50 text-neutral-900"
+              : "border-neutral-550 text-neutral-600 hover:border-neutral-600 hover:bg-neutral-100 hover:text-neutral-900",
           )}
         >
           <span className="flex size-6 items-center justify-center rounded-md border border-neutral-200 bg-neutral-0 text-neutral-900">
