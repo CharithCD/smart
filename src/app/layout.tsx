@@ -9,7 +9,7 @@ const arimo = Arimo({
 });
 
 export const metadata: Metadata = {
-  title: "Smart",
+  title: { default: "Smart", template: "%s · Smart" },
   description: "Launch-readiness assessment for startups",
 };
 

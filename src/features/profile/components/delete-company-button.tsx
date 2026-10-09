@@ -32,13 +32,17 @@ export function DeleteCompanyButton({ companyId, companyName }: Props) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={pending}>Cancel</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             disabled={pending}
-            onClick={() => startTransition(() => deleteCompanyAction(companyId))}
+            onClick={(event) => {
+              // The dialog would close on click. Keep it open until the redirect.
+              event.preventDefault();
+              startTransition(() => deleteCompanyAction(companyId));
+            }}
           >
-            Delete
+            {pending ? "Deleting…" : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

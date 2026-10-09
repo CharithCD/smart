@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { listCompanies } from "@/features/profile/data";
 import { CompanyList } from "@/features/profile/components/company-list";
+
+export const metadata: Metadata = { title: "Your companies" };
 
 export default async function CompaniesPage() {
   const companies = await listCompanies();

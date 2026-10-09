@@ -41,6 +41,8 @@ export function CompanyForm({ companyId, defaultValues }: Props) {
   });
   const [pending, startTransition] = useTransition();
   const { errors } = form.formState;
+  let submitLabel = companyId ? "Save changes" : "Create company";
+  if (pending) submitLabel = companyId ? "Saving…" : "Creating…";
 
   const onSubmit = form.handleSubmit((values) =>
     startTransition(async () => {
@@ -52,11 +54,11 @@ export function CompanyForm({ companyId, defaultValues }: Props) {
   );
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} noValidate>
       <FieldGroup>
         <Field data-invalid={!!errors.name}>
           <FieldLabel htmlFor="name">Company name</FieldLabel>
-          <Input id="name" {...form.register("name")} />
+          <Input id="name" aria-invalid={!!errors.name} {...form.register("name")} />
           <FieldError errors={[errors.name]} />
         </Field>
 
@@ -83,7 +85,7 @@ export function CompanyForm({ companyId, defaultValues }: Props) {
             <Field data-invalid={!!errors.productType}>
               <FieldLabel htmlFor="productType">Product type</FieldLabel>
               <Select value={field.value ?? ""} onValueChange={field.onChange}>
-                <SelectTrigger id="productType">
+                <SelectTrigger id="productType" aria-invalid={!!errors.productType}>
                   <SelectValue placeholder="Choose a product type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -119,6 +121,7 @@ export function CompanyForm({ companyId, defaultValues }: Props) {
           <FieldLabel htmlFor="industry">Industry (optional)</FieldLabel>
           <Input
             id="industry"
+            aria-invalid={!!errors.industry}
             placeholder="e.g. FinTech"
             {...form.register("industry", { setValueAs: (value) => value?.trim() || null })}
           />
@@ -146,6 +149,7 @@ export function CompanyForm({ companyId, defaultValues }: Props) {
           <Input
             id="budgetLkr"
             type="number"
+            aria-invalid={!!errors.budgetLkr}
             min={0}
             step={1}
             placeholder="5000000"
@@ -157,7 +161,7 @@ export function CompanyForm({ companyId, defaultValues }: Props) {
         </Field>
 
         <Button type="submit" disabled={pending} className="self-start">
-          {companyId ? "Save changes" : "Create company"}
+          {submitLabel}
         </Button>
       </FieldGroup>
     </form>

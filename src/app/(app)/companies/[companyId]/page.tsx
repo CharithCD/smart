@@ -1,8 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getCompany } from "@/features/profile/data";
 import { CompanyDetails } from "@/features/profile/components/company-details";
 import { DeleteCompanyButton } from "@/features/profile/components/delete-company-button";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/companies/[companyId]">): Promise<Metadata> {
+  const { companyId } = await params;
+  const company = await getCompany(companyId);
+  return { title: company.name };
+}
 
 export default async function CompanyPage({ params }: PageProps<"/companies/[companyId]">) {
   const { companyId } = await params;

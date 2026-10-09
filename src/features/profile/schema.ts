@@ -9,7 +9,11 @@ export const CompanySchema = z.object({
   // Optional fields are null when empty, so clearing one on edit also clears it in the database.
   industry: z.string().trim().max(100).nullable(),
   geographicFocus: z.enum(GEOGRAPHIC_FOCUSES).nullable(),
-  budgetLkr: z.number("Enter a whole number").int("Enter a whole number").min(0).nullable(),
+  budgetLkr: z
+    .number("Enter a whole number")
+    .int("Enter a whole number")
+    .min(0, "Enter 0 or more")
+    .nullable(),
 });
 
 export type CompanyInput = z.infer<typeof CompanySchema>;

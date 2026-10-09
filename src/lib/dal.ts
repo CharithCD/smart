@@ -14,13 +14,14 @@ export const requireUser = cache(async () => {
   return session.user;
 });
 
-export async function requireCompany(companyId: string) {
+// cache() so a page and its generateMetadata (the tab title) share one lookup per request.
+export const requireCompany = cache(async (companyId: string) => {
   const user = await requireUser();
   // Someone else's company looks the same as a missing one, so we don't reveal that it exists.
   const company = await db.company.findFirst({ where: { id: companyId, ownerId: user.id } });
   if (!company) notFound();
   return company;
-}
+});
 
 export async function requireAdmin() {
   const user = await requireUser();

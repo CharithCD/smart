@@ -35,22 +35,34 @@ export function SignupForm() {
         <CardDescription>Create an account to assess your company</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} noValidate>
           <FieldGroup>
             <Field data-invalid={!!errors.name}>
               <FieldLabel htmlFor="name">Name</FieldLabel>
-              <Input id="name" autoComplete="name" {...form.register("name")} />
+              <Input
+                id="name"
+                aria-invalid={!!errors.name}
+                autoComplete="name"
+                {...form.register("name")}
+              />
               <FieldError errors={[errors.name]} />
             </Field>
             <Field data-invalid={!!errors.email}>
               <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input id="email" type="email" autoComplete="email" {...form.register("email")} />
+              <Input
+                id="email"
+                aria-invalid={!!errors.email}
+                type="email"
+                autoComplete="email"
+                {...form.register("email")}
+              />
               <FieldError errors={[errors.email]} />
             </Field>
             <Field data-invalid={!!errors.password}>
               <FieldLabel htmlFor="password">Password</FieldLabel>
               <Input
                 id="password"
+                aria-invalid={!!errors.password}
                 type="password"
                 autoComplete="new-password"
                 {...form.register("password")}
@@ -58,7 +70,7 @@ export function SignupForm() {
               <FieldError errors={[errors.password]} />
             </Field>
             <Button type="submit" disabled={isSubmitting}>
-              Sign up
+              {isSubmitting ? "Signing up…" : "Sign up"}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
               Already have an account?{" "}

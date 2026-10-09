@@ -20,7 +20,7 @@ export function ChoiceRadios({ name, label, ids, labels, value, onChange, error 
       <RadioGroup value={value ?? ""} onValueChange={onChange} className="flex flex-wrap gap-4">
         {ids.map((id) => (
           <Field key={id} orientation="horizontal" className="w-auto">
-            <RadioGroupItem value={id} id={`${name}-${id}`} />
+            <RadioGroupItem value={id} id={`${name}-${id}`} aria-invalid={!!error} />
             <FieldLabel htmlFor={`${name}-${id}`} className="font-normal">
               {labels[id]}
             </FieldLabel>

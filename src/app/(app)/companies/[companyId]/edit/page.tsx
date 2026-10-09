@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import { getCompany } from "@/features/profile/data";
 import { CompanySchema } from "@/features/profile/schema";
 import { CompanyForm } from "@/features/profile/components/company-form";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/companies/[companyId]/edit">): Promise<Metadata> {
+  const { companyId } = await params;
+  const company = await getCompany(companyId);
+  return { title: `Edit ${company.name}` };
+}
 
 export default async function EditCompanyPage({
   params,
