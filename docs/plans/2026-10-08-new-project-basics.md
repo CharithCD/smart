@@ -16,7 +16,7 @@ Each phase is one branch and one PR (or a few), and finishes with checks you can
 | # | Phase | Result | Status |
 |---|---|---|---|
 | 1 | New repo, tools and look | Empty app with our theme, checks run on every PR | ✅ done (except GitHub) |
-| 2 | Database | Tables exist locally | |
+| 2 | Database | Tables exist locally | ✅ done (`Company` moved to Phase 3) |
 | 3 | Login and roles | Sign up / log in / log out; founder and admin roles | |
 | 4 | Companies (CRUD) | The example feature everyone copies | |
 | 5 | Deploy | Live on Vercel; teammates' merges deploy | |
@@ -68,6 +68,7 @@ What was done (2026-10-08):
    npm i -E @prisma/client@7.10.0 @prisma/adapter-pg@7.10.0 pg
    npm i -D -E prisma@7.10.0 tsx
    ```
+   Also `npm i -E server-only`, which the Next docs say to install for the `import "server-only"` line.
 2. Set up Prisma:
    - `prisma.config.ts` reads `DIRECT_URL`.
    - In `schema.prisma`, the generator is `prisma-client` with `output = "../src/generated/prisma"`. Git-ignore `src/generated/`.
@@ -88,6 +89,7 @@ What was done (2026-10-08):
    }
    ```
    `User` arrives in Phase 3, so add `Company` together with the auth tables there if migrating now is awkward.
+   **Done that way:** `Company` is added in Phase 3 with the auth tables.
 6. Add the scripts:
    - `db:migrate` = `prisma migrate dev`
    - `db:studio` = `prisma studio`
@@ -104,7 +106,7 @@ What was done (2026-10-08):
 3. Generate the tables and migrate:
    - Run `npx auth@latest generate` to write `User`, `Session`, `Account` and `Verification` into `schema.prisma`.
    - Check that the output looks like Prisma 7.
-   - Add `companies Company[]` to `User`.
+   - Add the `Company` model from Phase 2 step 5, and `companies Company[]` to `User`.
    - Run `npm run db:migrate`.
 4. Wire up the auth endpoints:
    - `app/api/auth/[...all]/route.ts`: `export const { GET, POST } = toNextJsHandler(auth)`
@@ -248,7 +250,7 @@ This is the example every other feature copies, so keep it exactly as in CONVENT
 
 | Phase | Check | If it doesn't work |
 |---|---|---|
-| 1 | Has Prisma 8 been released? | Stay on 7.10.0 and note it |
+| 1 | Has Prisma 8 been released? | Stay on 7.10.0 and note it. **Checked 2026-10-09:** only `8.0.0-rc.22`, which lacks `P2002`-style errors and most nested writes, so we stay on 7.10.0. npm's `latest` tag points to the RC, so always install with the pinned version. |
 | 3 | Does `npx auth generate` produce a schema Prisma 7 accepts? What is the exact name of the `input: false` option? | Write the auth tables by hand from the Better Auth docs |
 | 2–3 | Does `prisma dev` (one connection at a time) work with Better Auth? | Use a local Postgres in Docker |
 | 5 | Does a teammate's merge deploy? Is the database slow after being idle? | Switch deploy option; note the delay as a limitation |
