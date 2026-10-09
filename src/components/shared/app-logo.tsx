@@ -1,16 +1,19 @@
 import Link from "next/link";
 
+// The four squares are the four modules, in the same order and colours as the module cards:
+// infrastructure, marketing, compliance, product. The name may change, so it's written only here
+// and in the root layout's metadata.
 // h-11 so the logo link is a full 44px tap target on phones.
 export function AppLogo() {
   return (
     <Link href="/companies" className="flex h-11 w-fit items-center gap-2">
-      <span className="grid grid-cols-2 gap-0.5">
-        <span className="size-1.5 rounded-full bg-neutral-900" />
-        <span className="size-1.5 rounded-full bg-neutral-900" />
-        <span className="size-1.5 rounded-full bg-neutral-900" />
-        <span className="size-1.5 rounded-full bg-neutral-900" />
+      <span aria-hidden="true" className="grid grid-cols-2 gap-0.5">
+        <span className="size-2.5 rounded-[3px] bg-blue-300" />
+        <span className="size-2.5 rounded-[3px] bg-yellow-300" />
+        <span className="size-2.5 rounded-[3px] bg-lilac-300" />
+        <span className="size-2.5 rounded-[3px] bg-lime-300" />
       </span>
-      <span className="text-xl font-bold tracking-tight text-neutral-900">smart.</span>
+      <span className="text-xl font-bold tracking-tighter text-neutral-900">smart</span>
     </Link>
   );
 }
