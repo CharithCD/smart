@@ -19,9 +19,9 @@ Each phase is one branch and one PR (or a few), and finishes with checks you can
 | 2 | Database | Tables exist locally | ✅ done (`Company` moved to Phase 3) |
 | 3 | Login and roles | Sign up / log in / log out; founder and admin roles | ✅ done |
 | 4 | Companies (CRUD) | The example feature everyone copies | ✅ done |
-| 5 | Deploy | Live on Vercel; teammates' merges deploy | |
+| 5 | Deploy | Live on Vercel; teammates' merges deploy | ⏸ skipped for now (2026-10-09) |
 | 6 | Admin area and document upload | Admins upload, list and delete documents | |
-| 7 | Module starting point | Four module cards; each member can start their module | |
+| 7 | Module starting point | Four module cards; each member can start their module | ✅ done |
 
 ## Phase 1: New repo, tools and look ✅
 
@@ -236,13 +236,15 @@ This is the example every other feature copies, so keep it exactly as in CONVENT
 
 **Later (not in this plan):** reading the PDF text, splitting it into chunks and sending them to Pinecone. That waits for the group's embedding decision. It will change `status` to `processed` without changing the upload page.
 
-## Phase 7: Module starting point
+## Phase 7: Module starting point ✅
 
 1. `/companies/[companyId]` shows four module cards (Infrastructure, Marketing, Compliance, Product), all marked "Not started".
    **Done early (2026-10-09)** with the company page redesign: `ModuleCards` in `features/company/components/`, and the list is `MODULES` in `features/company/options.ts`. The cards become links as each module is built.
 2. Create `features/infrastructure/` with one empty page at `/companies/[companyId]/infrastructure`, following the guideline.
 3. Add a short `features/README.md`: "To start your module, copy `infrastructure/`, rename it, and follow `CONVENTIONS.md`."
 4. Tell the group: from here, each member builds their own module in their own folder.
+
+**Done (2026-10-09):** the page is `app/(app)/companies/[companyId]/infrastructure/page.tsx`, the empty state is `features/infrastructure/components/infrastructure-start.tsx`, and the guide is `features/README.md`. A module card becomes a link once its name is in `MODULES_WITH_PAGE` in `module-cards.tsx`.
 
 **Done when** a teammate can create their module folder and page from the README alone, without asking you.
 
