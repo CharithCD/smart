@@ -15,9 +15,9 @@ Each phase is one branch and one PR (or a few), and finishes with checks you can
 
 | # | Phase | Result | Status |
 |---|---|---|---|
-| 1 | New repo, tools and look | Empty app with our theme, checks run on every PR | ✅ done (except GitHub) |
+| 1 | New repo, tools and look | Empty app with our theme, checks run on every PR | ✅ done |
 | 2 | Database | Tables exist locally | ✅ done (`Company` moved to Phase 3) |
-| 3 | Login and roles | Sign up / log in / log out; founder and admin roles | |
+| 3 | Login and roles | Sign up / log in / log out; founder and admin roles | ✅ done |
 | 4 | Companies (CRUD) | The example feature everyone copies | |
 | 5 | Deploy | Live on Vercel; teammates' merges deploy | |
 | 6 | Admin area and document upload | Admins upload, list and delete documents | |
@@ -251,7 +251,7 @@ This is the example every other feature copies, so keep it exactly as in CONVENT
 | Phase | Check | If it doesn't work |
 |---|---|---|
 | 1 | Has Prisma 8 been released? | Stay on 7.10.0 and note it. **Checked 2026-10-09:** only `8.0.0-rc.22`, which lacks `P2002`-style errors and most nested writes, so we stay on 7.10.0. npm's `latest` tag points to the RC, so always install with the pinned version. |
-| 3 | Does `npx auth generate` produce a schema Prisma 7 accepts? What is the exact name of the `input: false` option? | Write the auth tables by hand from the Better Auth docs |
+| 3 | Does `npx auth generate` produce a schema Prisma 7 accepts? What is the exact name of the `input: false` option? | Write the auth tables by hand from the Better Auth docs. **Checked 2026-10-09 (better-auth 1.7.7):** yes, and `role` comes out as `String @default("founder")`. The option is `input: false`; a sign-up that sends `role` gets the default. The CLI can't load a file that imports `server-only` (ours and `db.ts` do), so run it on a temporary copy of the auth options with `prismaAdapter({}, …)`. |
 | 2–3 | Does `prisma dev` (one connection at a time) work with Better Auth? | Use a local Postgres in Docker |
 | 5 | Does a teammate's merge deploy? Is the database slow after being idle? | Switch deploy option; note the delay as a limitation |
 | 6 | Should Blob files be private or public, and how does the server read a private one? | Check the `@vercel/blob` docs when building |
