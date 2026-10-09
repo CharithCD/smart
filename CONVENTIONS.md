@@ -172,26 +172,30 @@ export async function deleteCompany(companyId: string) {
 }
 ```
 
-**`actions.ts`** always does three steps: check the input, call `data.ts`, go to the next page.
+**`actions.ts`** always does four steps: check the input, call `data.ts`, refresh the layout, go to the next page. The refresh matters because the sidebar (in the layout) lists companies, and a redirect alone doesn't re-render layouts.
 
 ```ts
 "use server";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { CompanySchema, type CompanyInput } from "./schema";
 import { createCompany, updateCompany, deleteCompany } from "./data";
 
 export async function createCompanyAction(input: CompanyInput) {
   const company = await createCompany(CompanySchema.parse(input));
+  revalidatePath("/", "layout");
   redirect(`/companies/${company.id}`);
 }
 
 export async function updateCompanyAction(companyId: string, input: CompanyInput) {
   await updateCompany(companyId, CompanySchema.parse(input));
+  revalidatePath("/", "layout");
   redirect(`/companies/${companyId}`);
 }
 
 export async function deleteCompanyAction(companyId: string) {
   await deleteCompany(companyId);
+  revalidatePath("/", "layout");
   redirect("/companies");
 }
 ```
@@ -203,6 +207,7 @@ export async function deleteCompanyAction(companyId: string) {
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import { CompanySchema, type CompanyInput } from "@/features/profile/schema";
 import { createCompanyAction, updateCompanyAction } from "@/features/profile/actions";
 
@@ -213,9 +218,12 @@ export function CompanyForm({ companyId, defaultValues }: Props) {
   const [pending, startTransition] = useTransition();
 
   const onSubmit = form.handleSubmit((values) =>
-    startTransition(() =>
-      companyId ? updateCompanyAction(companyId, values) : createCompanyAction(values),
-    ),
+    startTransition(async () => {
+      const result = companyId
+        ? await updateCompanyAction(companyId, values)
+        : await createCompanyAction(values);
+      if (result?.error) toast.error(result.error);
+    }),
   );
 
   return <form onSubmit={onSubmit}>{/* shadcn Field + Input + Select + Button */}</form>;
@@ -227,6 +235,7 @@ export function CompanyForm({ companyId, defaultValues }: Props) {
 ```tsx
 // app/(app)/companies/[companyId]/edit/page.tsx
 import { getCompany } from "@/features/profile/data";
+import { CompanySchema } from "@/features/profile/schema";
 import { CompanyForm } from "@/features/profile/components/company-form";
 
 export default async function EditCompanyPage({
@@ -234,12 +243,8 @@ export default async function EditCompanyPage({
 }: PageProps<"/companies/[companyId]/edit">) {
   const { companyId } = await params;
   const company = await getCompany(companyId);
-  return (
-    <CompanyForm
-      companyId={company.id}
-      defaultValues={{ name: company.name, stage: company.stage }}
-    />
-  );
+  // parse() turns the stored strings back into the form's types (stage is a string in the database)
+  return <CompanyForm companyId={company.id} defaultValues={CompanySchema.parse(company)} />;
 }
 ```
 
@@ -277,6 +282,7 @@ export default async function EditCompanyPage({
 **Data and secrets**
 
 - Money is an integer in LKR (`budgetLkr`).
+- After `npm run db:migrate`, restart `npm run dev`. The dev server keeps its old Prisma client, which doesn't know the new columns.
 - Only server files read `process.env`. Never use `NEXT_PUBLIC_` for a key.
 - Never send a company name or personal data to an AI API.
 

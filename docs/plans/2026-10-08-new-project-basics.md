@@ -18,7 +18,7 @@ Each phase is one branch and one PR (or a few), and finishes with checks you can
 | 1 | New repo, tools and look | Empty app with our theme, checks run on every PR | ✅ done |
 | 2 | Database | Tables exist locally | ✅ done (`Company` moved to Phase 3) |
 | 3 | Login and roles | Sign up / log in / log out; founder and admin roles | ✅ done |
-| 4 | Companies (CRUD) | The example feature everyone copies | |
+| 4 | Companies (CRUD) | The example feature everyone copies | ✅ done |
 | 5 | Deploy | Live on Vercel; teammates' merges deploy | |
 | 6 | Admin area and document upload | Admins upload, list and delete documents | |
 | 7 | Module starting point | Four module cards; each member can start their module | |
@@ -149,6 +149,7 @@ What was done (2026-10-08):
 This is the example every other feature copies, so keep it exactly as in CONVENTIONS.md, section 3.
 
 1. Agree the profile fields and their choice lists with the group: stage, product type, operating mode, industry, budget. Put them in `features/profile/options.ts`, add the columns to `Company`, and migrate.
+   **Chosen (2026-10-09):** required `name`, `stage`, `productType`, `operatingMode`; optional `industry` (text), `geographicFocus`, `budgetLkr`. The ids come from the prototype's infrastructure engine, so modules can read them directly.
 2. Create `features/profile/`:
    - `schema.ts`, `data.ts`, `actions.ts`
    - `components/company-form.tsx`, `company-list.tsx`, `company-details.tsx`, `delete-company-button.tsx`
@@ -259,5 +260,5 @@ This is the example every other feature copies, so keep it exactly as in CONVENT
 ## What you need to prepare
 
 - **Before Phase 1:** a GitHub account for the repo, and the agreed repo name (this plan uses `smart-app`).
-- **Before Phase 4:** the group agrees on the company profile fields and their choices.
+- **Before Phase 4:** the group agrees on the company profile fields and their choices. *(Done: see Phase 4 step 1.)*
 - **Before Phase 5:** decide who owns the Vercel and Prisma accounts, and choose deploy option (a) or (b).
