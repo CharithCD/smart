@@ -41,7 +41,7 @@ export default async function CompanyPage({ params }: PageProps<"/companies/[com
         </AppButton>
         <CompanyMenu companyId={company.id} companyName={company.name} />
       </PageHeader>
-      <ModuleCards />
+      <ModuleCards companyId={company.id} />
       <CompanyDetails company={company} />
     </div>
   );
