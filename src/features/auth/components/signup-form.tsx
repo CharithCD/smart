@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { FieldGroup } from "@/components/ui/field";
+import { AppButton } from "@/components/shared/app-button";
+import { TextField } from "@/components/shared/text-field";
 import { authClient } from "@/lib/auth-client";
 import { SignupSchema, type SignupInput } from "@/features/auth/schema";
 
@@ -39,41 +39,32 @@ export function SignupForm() {
       <CardContent>
         <form onSubmit={onSubmit} noValidate>
           <FieldGroup>
-            <Field data-invalid={!!errors.name}>
-              <FieldLabel htmlFor="name">Name</FieldLabel>
-              <Input
-                id="name"
-                aria-invalid={!!errors.name}
-                autoComplete="name"
-                {...form.register("name")}
-              />
-              <FieldError errors={[errors.name]} />
-            </Field>
-            <Field data-invalid={!!errors.email}>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input
-                id="email"
-                aria-invalid={!!errors.email}
-                type="email"
-                autoComplete="email"
-                {...form.register("email")}
-              />
-              <FieldError errors={[errors.email]} />
-            </Field>
-            <Field data-invalid={!!errors.password}>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                id="password"
-                aria-invalid={!!errors.password}
-                type="password"
-                autoComplete="new-password"
-                {...form.register("password")}
-              />
-              <FieldError errors={[errors.password]} />
-            </Field>
-            <Button type="submit" disabled={isSubmitting}>
+            <TextField
+              id="name"
+              label="Name"
+              error={errors.name}
+              autoComplete="name"
+              {...form.register("name")}
+            />
+            <TextField
+              id="email"
+              label="Email"
+              error={errors.email}
+              type="email"
+              autoComplete="email"
+              {...form.register("email")}
+            />
+            <TextField
+              id="password"
+              label="Password"
+              error={errors.password}
+              type="password"
+              autoComplete="new-password"
+              {...form.register("password")}
+            />
+            <AppButton type="submit" size="lg" disabled={isSubmitting}>
               {isSubmitting ? "Signing up…" : "Sign up"}
-            </Button>
+            </AppButton>
             <p className="text-center text-sm text-muted-foreground">
               Already have an account?{" "}
               <Link href="/login" className="underline">

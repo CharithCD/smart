@@ -33,17 +33,22 @@ export function CompanyDetails({ company }: Props) {
   ];
 
   return (
-    <dl className="grid gap-4 sm:grid-cols-2">
-      {rows.map((row) => (
-        <div key={row.label} className="rounded-lg border p-4">
-          <dt className="text-sm text-muted-foreground">{row.label}</dt>
-          {row.value ? (
-            <dd className="mt-1 font-medium">{row.value}</dd>
-          ) : (
-            <dd className="mt-1 text-muted-foreground">Not set</dd>
-          )}
-        </div>
-      ))}
-    </dl>
+    <section aria-labelledby="details-heading" className="flex flex-col gap-2">
+      <h2 id="details-heading" className="text-lg font-bold text-neutral-900">
+        Company details
+      </h2>
+      <dl className="grid gap-x-12 sm:grid-cols-2">
+        {rows.map((row) => (
+          <div key={row.label} className="flex justify-between gap-4 border-b py-3">
+            <dt className="text-neutral-600">{row.label}</dt>
+            {row.value ? (
+              <dd className="text-right font-medium text-neutral-900">{row.value}</dd>
+            ) : (
+              <dd className="text-right text-neutral-600">Not set</dd>
+            )}
+          </div>
+        ))}
+      </dl>
+    </section>
   );
 }

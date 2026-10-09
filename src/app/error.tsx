@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { AppButton } from "@/components/shared/app-button";
 
 // Shows anything unexpected (database down, a bug). Expected problems are toasts instead.
 export default function Error({
@@ -14,7 +14,7 @@ export default function Error({
       <p className="text-muted-foreground">
         Please try again. If it keeps happening, tell the team.
       </p>
-      <Button onClick={retry}>Try again</Button>
+      <AppButton onClick={retry}>Try again</AppButton>
     </main>
   );
 }

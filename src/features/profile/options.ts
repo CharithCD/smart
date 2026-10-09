@@ -46,3 +46,21 @@ export const GEOGRAPHIC_FOCUS_LABELS: Record<string, string> = {
   national: "National",
   international: "International",
 };
+
+// The four assessment modules every company goes through. Here, not in a module's folder,
+// because the company page lists all four and every feature may import this file.
+export const MODULES = ["infrastructure", "marketing", "compliance", "product"] as const;
+
+export const MODULE_LABELS: Record<string, string> = {
+  infrastructure: "Infrastructure",
+  marketing: "Marketing",
+  compliance: "Compliance",
+  product: "Product",
+};
+
+export const MODULE_DESCRIPTIONS: Record<string, string> = {
+  infrastructure: "Tech readiness and how well your setup can grow",
+  marketing: "Audience, channels and strategy",
+  compliance: "Sri Lankan rules and legal steps",
+  product: "Market validation and SWOT",
+};

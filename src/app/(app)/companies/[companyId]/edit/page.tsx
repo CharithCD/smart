@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/shared/page-header";
 import { getCompany } from "@/features/profile/data";
 import { CompanySchema } from "@/features/profile/schema";
 import { CompanyForm } from "@/features/profile/components/company-form";
@@ -18,7 +19,7 @@ export default async function EditCompanyPage({
   const company = await getCompany(companyId);
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Edit {company.name}</h1>
+      <PageHeader title={`Edit ${company.name}`} />
       {/* parse() turns the stored strings back into the form's types and drops id, ownerId… */}
       <CompanyForm companyId={company.id} defaultValues={CompanySchema.parse(company)} />
     </div>

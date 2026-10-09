@@ -239,6 +239,7 @@ This is the example every other feature copies, so keep it exactly as in CONVENT
 ## Phase 7: Module starting point
 
 1. `/companies/[companyId]` shows four module cards (Infrastructure, Marketing, Compliance, Product), all marked "Not started".
+   **Done early (2026-10-09)** with the company page redesign: `ModuleCards` in `features/profile/components/`, and the list is `MODULES` in `features/profile/options.ts`. The cards become links as each module is built.
 2. Create `features/infrastructure/` with one empty page at `/companies/[companyId]/infrastructure`, following the guideline.
 3. Add a short `features/README.md`: "To start your module, copy `infrastructure/`, rename it, and follow `CONVENTIONS.md`."
 4. Tell the group: from here, each member builds their own module in their own folder.

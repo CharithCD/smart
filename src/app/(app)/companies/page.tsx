@@ -1,22 +1,14 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { redirect } from "next/navigation";
 import { listCompanies } from "@/features/profile/data";
-import { CompanyList } from "@/features/profile/components/company-list";
+import { CompanyWelcome } from "@/features/profile/components/company-welcome";
 
-export const metadata: Metadata = { title: "Your companies" };
+export const metadata: Metadata = { title: "Get started" };
 
+// The sidebar already lists every company, so this page doesn't repeat that list.
+// With companies, open the newest one. Without, explain the app and how to start.
 export default async function CompaniesPage() {
   const companies = await listCompanies();
-  return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Your companies</h1>
-        <Button asChild>
-          <Link href="/companies/new">New company</Link>
-        </Button>
-      </div>
-      <CompanyList companies={companies} />
-    </div>
-  );
+  if (companies.length > 0) redirect(`/companies/${companies[0].id}`);
+  return <CompanyWelcome />;
 }

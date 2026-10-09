@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { FieldGroup } from "@/components/ui/field";
+import { AppButton } from "@/components/shared/app-button";
+import { TextField } from "@/components/shared/text-field";
 import { authClient } from "@/lib/auth-client";
 import { LoginSchema, type LoginInput } from "@/features/auth/schema";
 
@@ -39,31 +39,25 @@ export function LoginForm() {
       <CardContent>
         <form onSubmit={onSubmit} noValidate>
           <FieldGroup>
-            <Field data-invalid={!!errors.email}>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input
-                id="email"
-                aria-invalid={!!errors.email}
-                type="email"
-                autoComplete="email"
-                {...form.register("email")}
-              />
-              <FieldError errors={[errors.email]} />
-            </Field>
-            <Field data-invalid={!!errors.password}>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                id="password"
-                aria-invalid={!!errors.password}
-                type="password"
-                autoComplete="current-password"
-                {...form.register("password")}
-              />
-              <FieldError errors={[errors.password]} />
-            </Field>
-            <Button type="submit" disabled={isSubmitting}>
+            <TextField
+              id="email"
+              label="Email"
+              error={errors.email}
+              type="email"
+              autoComplete="email"
+              {...form.register("email")}
+            />
+            <TextField
+              id="password"
+              label="Password"
+              error={errors.password}
+              type="password"
+              autoComplete="current-password"
+              {...form.register("password")}
+            />
+            <AppButton type="submit" size="lg" disabled={isSubmitting}>
               {isSubmitting ? "Logging in…" : "Log in"}
-            </Button>
+            </AppButton>
             <p className="text-center text-sm text-muted-foreground">
               No account yet?{" "}
               <Link href="/signup" className="underline">

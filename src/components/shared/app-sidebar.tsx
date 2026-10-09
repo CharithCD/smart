@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import { Menu } from "lucide-react";
+import { AppButton } from "@/components/shared/app-button";
 import { AppLogo } from "@/components/shared/app-logo";
 import { SidebarNav } from "@/components/shared/sidebar-nav";
-import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 // Ported from the prototype's sidebar. The user menu comes in as children, so this shared
@@ -24,9 +24,9 @@ export function AppSidebar({ companies, children }: Props) {
         <AppLogo />
         <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" className="size-11" aria-label="Open menu">
+            <AppButton variant="ghost" className="size-11 px-0" aria-label="Open menu">
               <Menu className="size-5" />
-            </Button>
+            </AppButton>
           </SheetTrigger>
           <SheetContent side="left" aria-describedby={undefined} className="gap-6 p-6">
             <SheetTitle className="sr-only">Menu</SheetTitle>

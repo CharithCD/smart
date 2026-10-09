@@ -13,6 +13,26 @@ const FEATURES = [
   "product",
 ];
 
+// CONVENTIONS.md: pages and features use the shared version of these, so every screen looks
+// the same. Only components/shared/ may import them from components/ui/.
+const SHARED_ONLY = [
+  { name: "@/components/ui/button", message: "Use AppButton from @/components/shared/app-button." },
+  { name: "@/components/ui/input", message: "Use TextField from @/components/shared/text-field." },
+  {
+    name: "@/components/ui/field",
+    importNames: ["Field", "FieldLabel", "FieldError", "FieldSet", "FieldLegend"],
+    message: "Use TextField or ChoiceField from @/components/shared/.",
+  },
+  {
+    name: "@/components/ui/radio-group",
+    message: "Use ChoiceField from @/components/shared/choice-field.",
+  },
+  {
+    name: "@/components/ui/alert-dialog",
+    message: "Use ConfirmDialog from @/components/shared/confirm-dialog.",
+  },
+];
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
@@ -28,6 +48,19 @@ const eslintConfig = defineConfig([
     },
   },
 
+  {
+    files: ["src/app/**"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: SHARED_ONLY,
+          patterns: [{ group: ["../*"], message: 'Import with "@/…" instead of "../".' }],
+        },
+      ],
+    },
+  },
+
   // CONVENTIONS.md: a feature never imports another feature,
   // except the shared company profile (options + schema).
   ...FEATURES.map((feature) => ({
@@ -36,6 +69,7 @@ const eslintConfig = defineConfig([
       "no-restricted-imports": [
         "error",
         {
+          paths: SHARED_ONLY,
           patterns: [
             { group: ["../*"], message: 'Import with "@/…" instead of "../".' },
             {

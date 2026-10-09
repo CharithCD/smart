@@ -1,5 +1,5 @@
 import { CircleUserRound } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AppButton } from "@/components/shared/app-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,10 +15,10 @@ export function UserMenu({ name, email }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">
+        <AppButton variant="ghost" className="px-3">
           <CircleUserRound />
           {name}
-        </Button>
+        </AppButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel className="font-normal text-muted-foreground">{email}</DropdownMenuLabel>

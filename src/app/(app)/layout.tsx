@@ -13,7 +13,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
       <AppSidebar companies={companies}>
         <UserMenu name={user.name} email={user.email} />
       </AppSidebar>
-      <main className="mx-auto w-full max-w-4xl flex-1 p-6 md:p-10">{children}</main>
+      <main className="mx-auto w-full max-w-5xl flex-1 p-6 md:p-10">{children}</main>
     </div>
   );
 }

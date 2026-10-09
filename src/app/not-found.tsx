@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { AppButton } from "@/components/shared/app-button";
 
 export const metadata: Metadata = { title: "Page not found" };
 
@@ -11,9 +11,9 @@ export default function NotFound() {
       <p className="text-muted-foreground">
         It doesn&apos;t exist, or you don&apos;t have access to it.
       </p>
-      <Button asChild>
+      <AppButton asChild>
         <Link href="/companies">Go to your companies</Link>
-      </Button>
+      </AppButton>
     </main>
   );
 }
