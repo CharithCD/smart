@@ -1,8 +1,9 @@
 "use client";
-import { Field, FieldError, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ChoiceCards } from "@/components/shared/choice-cards";
+import { FieldError, FieldLegend, FieldSet } from "@/components/ui/field";
 
-// One radio group for a list from options.ts. Used for stage, operating mode and geographic focus.
+// One labelled set of choice cards for a list from options.ts.
+// Used for stage, product type, operating mode and geographic focus.
 type Props = {
   name: string;
   label: string;
@@ -17,16 +18,14 @@ export function ChoiceRadios({ name, label, ids, labels, value, onChange, error 
   return (
     <FieldSet data-invalid={!!error}>
       <FieldLegend variant="label">{label}</FieldLegend>
-      <RadioGroup value={value ?? ""} onValueChange={onChange} className="flex flex-wrap gap-4">
-        {ids.map((id) => (
-          <Field key={id} orientation="horizontal" className="w-auto">
-            <RadioGroupItem value={id} id={`${name}-${id}`} aria-invalid={!!error} />
-            <FieldLabel htmlFor={`${name}-${id}`} className="font-normal">
-              {labels[id]}
-            </FieldLabel>
-          </Field>
-        ))}
-      </RadioGroup>
+      <ChoiceCards
+        name={name}
+        ids={ids}
+        labels={labels}
+        value={value}
+        onChange={onChange}
+        isInvalid={!!error}
+      />
       <FieldError errors={[error]} />
     </FieldSet>
   );
