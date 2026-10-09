@@ -8,7 +8,7 @@ import { AppButton } from "@/components/shared/app-button";
 import { ChoiceField } from "@/components/shared/choice-field";
 import { FormPanel } from "@/components/shared/form-panel";
 import { TextField } from "@/components/shared/text-field";
-import { CompanyIllustration } from "@/features/profile/components/company-illustration";
+import { CompanyIllustration } from "@/features/company/components/company-illustration";
 import {
   GEOGRAPHIC_FOCUSES,
   GEOGRAPHIC_FOCUS_LABELS,
@@ -18,9 +18,9 @@ import {
   PRODUCT_TYPE_LABELS,
   STAGES,
   STAGE_LABELS,
-} from "@/features/profile/options";
-import { CompanySchema, type CompanyInput } from "@/features/profile/schema";
-import { createCompanyAction, updateCompanyAction } from "@/features/profile/actions";
+} from "@/features/company/options";
+import { CompanySchema, type CompanyInput } from "@/features/company/schema";
+import { createCompanyAction, updateCompanyAction } from "@/features/company/actions";
 
 type Props = { companyId?: string; defaultValues?: CompanyInput };
 

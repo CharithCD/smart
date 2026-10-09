@@ -39,7 +39,7 @@ What was done (2026-10-08):
 7. **ESLint rules that enforce CONVENTIONS.md:**
    - `no-explicit-any` is an error.
    - `../` imports are blocked.
-   - One feature importing another is blocked, except `@/features/profile/options` and `@/features/profile/schema`. Each feature is listed in `FEATURES` in `eslint.config.mjs`.
+   - One feature importing another is blocked, except `@/features/company/options` and `@/features/company/schema`. Each feature is listed in `FEATURES` in `eslint.config.mjs`.
 8. **GitHub Action** `.github/workflows/check.yml` runs `npm ci && npm run check` on every PR and push to `main`.
 9. **shadcn/ui:**
    - `npx shadcn@4.21.4 init --base radix --preset nova` (Radix, Lucide icons).
@@ -53,7 +53,7 @@ What was done (2026-10-08):
 **Checked:**
 - `npm run check` passes.
 - The page renders with Arimo and the brand colours.
-- A test file importing another feature, `profile/data` or `../` fails lint, while `profile/options` passes.
+- A test file importing another feature, `company/data` or `../` fails lint, while `company/options` passes.
 
 **Still to do (needs your accounts):**
 - Create the GitHub repo and push.
@@ -81,8 +81,8 @@ What was done (2026-10-08):
      ownerId   String
      owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
      name      String
-     stage     String   // id from features/profile/options.ts
-     // more profile fields (productType, operatingMode, budgetLkr…) are added in Phase 4
+     stage     String   // id from features/company/options.ts
+     // more company fields (productType, operatingMode, budgetLkr…) are added in Phase 4
      createdAt DateTime @default(now())
      updatedAt DateTime @updatedAt
      @@index([ownerId])
@@ -148,9 +148,9 @@ What was done (2026-10-08):
 
 This is the example every other feature copies, so keep it exactly as in CONVENTIONS.md, section 3.
 
-1. Agree the profile fields and their choice lists with the group: stage, product type, operating mode, industry, budget. Put them in `features/profile/options.ts`, add the columns to `Company`, and migrate.
+1. Agree the company fields and their choice lists with the group: stage, product type, operating mode, industry, budget. Put them in `features/company/options.ts`, add the columns to `Company`, and migrate.
    **Chosen (2026-10-09):** required `name`, `stage`, `productType`, `operatingMode`; optional `industry` (text), `geographicFocus`, `budgetLkr`. The ids come from the prototype's infrastructure engine, so modules can read them directly.
-2. Create `features/profile/`:
+2. Create `features/company/`:
    - `schema.ts`, `data.ts`, `actions.ts`
    - `components/company-form.tsx`, `company-list.tsx`, `company-details.tsx`, `delete-company-button.tsx`
 3. Add the pages:
@@ -209,7 +209,7 @@ This is the example every other feature copies, so keep it exactly as in CONVENT
      createdAt  DateTime @default(now())
    }
    ```
-2. Create `features/knowledge/`, with the same shape as `profile`:
+2. Create `features/knowledge/`, with the same shape as `company`:
    - `options.ts`: `MODULES`, `SOURCE_TYPES` + labels
    - `schema.ts`: `DocumentSchema` (title, module, sourceType, sourceUrl, fileName, blobUrl)
    - `data.ts`: `listDocuments`, `createDocument`, `deleteDocument`. **Each one starts with `requireAdmin()`.** `deleteDocument` also removes the file from Blob.
@@ -239,7 +239,7 @@ This is the example every other feature copies, so keep it exactly as in CONVENT
 ## Phase 7: Module starting point
 
 1. `/companies/[companyId]` shows four module cards (Infrastructure, Marketing, Compliance, Product), all marked "Not started".
-   **Done early (2026-10-09)** with the company page redesign: `ModuleCards` in `features/profile/components/`, and the list is `MODULES` in `features/profile/options.ts`. The cards become links as each module is built.
+   **Done early (2026-10-09)** with the company page redesign: `ModuleCards` in `features/company/components/`, and the list is `MODULES` in `features/company/options.ts`. The cards become links as each module is built.
 2. Create `features/infrastructure/` with one empty page at `/companies/[companyId]/infrastructure`, following the guideline.
 3. Add a short `features/README.md`: "To start your module, copy `infrastructure/`, rename it, and follow `CONVENTIONS.md`."
 4. Tell the group: from here, each member builds their own module in their own folder.
@@ -261,5 +261,5 @@ This is the example every other feature copies, so keep it exactly as in CONVENT
 ## What you need to prepare
 
 - **Before Phase 1:** a GitHub account for the repo, and the agreed repo name (this plan uses `smart-app`).
-- **Before Phase 4:** the group agrees on the company profile fields and their choices. *(Done: see Phase 4 step 1.)*
+- **Before Phase 4:** the group agrees on the company fields and their choices. *(Done: see Phase 4 step 1.)*
 - **Before Phase 5:** decide who owns the Vercel and Prisma accounts, and choose deploy option (a) or (b).

@@ -5,7 +5,7 @@ import nextTs from "eslint-config-next/typescript";
 // Every feature folder. Add a new feature here when you create its folder.
 const FEATURES = [
   "auth",
-  "profile",
+  "company",
   "knowledge",
   "infrastructure",
   "marketing",
@@ -62,7 +62,7 @@ const eslintConfig = defineConfig([
   },
 
   // CONVENTIONS.md: a feature never imports another feature,
-  // except the shared company profile (options + schema).
+  // except the shared company feature (options + schema).
   ...FEATURES.map((feature) => ({
     files: [`src/features/${feature}/**`],
     rules: {
@@ -73,8 +73,8 @@ const eslintConfig = defineConfig([
           patterns: [
             { group: ["../*"], message: 'Import with "@/…" instead of "../".' },
             {
-              // any "@/features/…" import except its own folder and profile/options or profile/schema
-              regex: `^@/features/(?!${feature}/|profile/options$|profile/schema$)`,
+              // any "@/features/…" import except its own folder and company/options or company/schema
+              regex: `^@/features/(?!${feature}/|company/options$|company/schema$)`,
               message: "A feature may not import another feature (see CONVENTIONS.md).",
             },
           ],

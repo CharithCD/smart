@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AppButton } from "@/components/shared/app-button";
 import { PageHeader } from "@/components/shared/page-header";
-import { getCompany } from "@/features/profile/data";
+import { getCompany } from "@/features/company/data";
 import {
   OPERATING_MODE_LABELS,
   PRODUCT_TYPE_LABELS,
   STAGE_LABELS,
-} from "@/features/profile/options";
-import { CompanyDetails } from "@/features/profile/components/company-details";
-import { CompanyMenu } from "@/features/profile/components/company-menu";
-import { ModuleCards } from "@/features/profile/components/module-cards";
+} from "@/features/company/options";
+import { CompanyDetails } from "@/features/company/components/company-details";
+import { CompanyMenu } from "@/features/company/components/company-menu";
+import { ModuleCards } from "@/features/company/components/module-cards";
 
 export async function generateMetadata({
   params,

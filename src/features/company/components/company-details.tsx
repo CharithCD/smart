@@ -3,7 +3,7 @@ import {
   OPERATING_MODE_LABELS,
   PRODUCT_TYPE_LABELS,
   STAGE_LABELS,
-} from "@/features/profile/options";
+} from "@/features/company/options";
 
 type Props = {
   company: {

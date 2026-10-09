@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/shared/page-header";
-import { CompanyForm } from "@/features/profile/components/company-form";
+import { CompanyForm } from "@/features/company/components/company-form";
 
 export const metadata: Metadata = { title: "New company" };
 

@@ -83,7 +83,7 @@ smart/
    │  ├─ (app)/page.tsx                # my companies
    │  ├─ (app)/companies/new/page.tsx
    │  ├─ (app)/companies/[companyId]/page.tsx                    # overview: 4 module cards
-   │  ├─ (app)/companies/[companyId]/profile/page.tsx
+   │  ├─ (app)/companies/[companyId]/edit/page.tsx
    │  ├─ (app)/companies/[companyId]/infrastructure/page.tsx     # wizard (start/resume draft)
    │  ├─ (app)/companies/[companyId]/infrastructure/[assessmentId]/page.tsx  # results + plan + report
    │  ├─ (app)/companies/[companyId]/marketing/…  compliance/…  product/…
@@ -98,7 +98,7 @@ smart/
    │  └─ shared/                       # our composites: page-header, step-wizard, choice-cards,
    │                                   #   question-field, score-card, readiness-badge
    ├─ features/
-   │  ├─ profile/                      # shared company profile (everyone depends on it)
+   │  ├─ company/                      # shared company (everyone depends on it)
    │  ├─ dashboard/
    │  ├─ knowledge/                    # shared RAG knowledge base: ingest.ts, search.ts, admin upload page components
    │  └─ infrastructure/               # ← one module = one owner
@@ -122,7 +122,7 @@ smart/
 **Import rules**, which keep the layers honest:
 - `engine/` and `config/` import nothing from `lib/`, `data.ts` or `report.ts`. Being pure is what makes the score reproducible.
 - `components/` (client) import from `schema.ts`, `config/`, `engine/` and `actions.ts`, but never from `data.ts`, `lib/db.ts` or `lib/llm`. `server-only` makes the build fail if someone tries.
-- A feature never imports from another feature, except that `profile` and `dashboard` read the shared `ModuleResult` contract.
+- A feature never imports from another feature, except that `company` and `dashboard` read the shared `ModuleResult` contract.
 
 ### 4. Forms
 
@@ -134,7 +134,7 @@ smart/
 - needs live weight previews while typing
 - has nested answers
 
-With `FormData`, all of this becomes string parsing and loses instant validation. Having two patterns would break KISS, so we use one pattern for everything, including login and the company profile.
+With `FormData`, all of this becomes string parsing and loses instant validation. Having two patterns would break KISS, so we use one pattern for everything, including login and the company form.
 
 The shadcn docs show this exact pattern: `Controller` + `Field`/`FieldLabel`/`FieldError`, `zodResolver`, and a `RadioGroup` wired to `field.value`/`field.onChange` [shadcn RHF docs].
 
@@ -145,32 +145,32 @@ The shadcn docs show this exact pattern: `Controller` + `Field`/`FieldLabel`/`Fi
 3. **Everything else throws** (not logged in, not the owner, database down). An error thrown inside `startTransition` "will bubble up to the nearest error boundary" (`error.tsx`) [Next.js error handling].
 
 ```ts
-// src/features/profile/schema.ts
-export const ProfileSchema = z.object({ /* name, stage, productType, … */ });
-export const UpdateProfileSchema = ProfileSchema.extend({ companyId: z.string() });
-export type UpdateProfileInput = z.input<typeof UpdateProfileSchema>;
+// src/features/company/schema.ts
+export const CompanySchema = z.object({ /* name, stage, productType, … */ });
+export const UpdateCompanySchema = CompanySchema.extend({ companyId: z.string() });
+export type UpdateCompanyInput = z.input<typeof UpdateCompanySchema>;
 ```
 
 ```ts
-// src/features/profile/actions.ts
+// src/features/company/actions.ts
 'use server';
 import { revalidatePath } from 'next/cache';
-import { UpdateProfileSchema, type UpdateProfileInput } from './schema';
-import { updateProfile } from './data'; // DAL: checks session + ownership, throws if not allowed
+import { UpdateCompanySchema, type UpdateCompanyInput } from './schema';
+import { updateCompany } from './data'; // DAL: checks session + ownership, throws if not allowed
 
-export async function updateProfileAction(input: UpdateProfileInput) {
-  const { companyId, ...profile } = UpdateProfileSchema.parse(input);
-  await updateProfile(companyId, profile);
+export async function updateCompanyAction(input: UpdateCompanyInput) {
+  const { companyId, ...company } = UpdateCompanySchema.parse(input);
+  await updateCompany(companyId, company);
   revalidatePath(`/companies/${companyId}`);
 }
 ```
 
 ```tsx
 // client side (inside a 'use client' component)
-const form = useForm({ resolver: zodResolver(ProfileSchema), defaultValues });
+const form = useForm({ resolver: zodResolver(CompanySchema), defaultValues });
 const [pending, startTransition] = useTransition();
 const onSubmit = form.handleSubmit((values) =>
-  startTransition(() => updateProfileAction({ companyId, ...values })),
+  startTransition(() => updateCompanyAction({ companyId, ...values })),
 );
 ```
 
@@ -233,8 +233,8 @@ model Company {
   ownerId         String
   owner           User     @relation(fields: [ownerId], references: [id])
   name            String
-  // shared profile: real columns so we can run descriptive stats and all modules read the same values
-  stage           String   // values come from src/features/profile/schema.ts (single source of truth)
+  // shared company fields: real columns so we can run descriptive stats and all modules read the same values
+  stage           String   // values come from src/features/company/schema.ts (single source of truth)
   productType     String
   operatingMode   String
   industry        String?
@@ -272,7 +272,7 @@ model Report {
 }
 ```
 
-The profile fields that every module uses are real columns. Each module's own data is `Json`, so a teammate can change their questions **without a migration**. Profile values are strings validated by the Zod enum in `features/profile/schema.ts`, not Prisma enums, so adding an option doesn't need a migration either.
+The company fields that every module uses are real columns. Each module's own data is `Json`, so a teammate can change their questions **without a migration**. Company values are strings validated by the Zod enum in `features/company/schema.ts`, not Prisma enums, so adding an option doesn't need a migration either.
 
 ### 8. Tooling and conventions (additions to the earlier doc)
 
@@ -290,7 +290,7 @@ The profile fields that every module uses are real columns. Each module's own da
 | 2. `shadcn init` (Radix), theme from the current `index.css` palette + Arimo | A test page shows themed Button/Card/RadioGroup |
 | 3. Prisma 7.10 + Prisma Postgres (Singapore), schema above, first migration, `db.ts` singleton | `db:studio` shows the tables |
 | 4. Better Auth (email/password) + login/signup pages + `proxy.ts` + `lib/dal.ts` | Can't reach `/companies/*` when logged out, and a second account can't open the first account's company |
-| 5. Port the shell (sidebar/tabs) + company CRUD + profile form (RHF pattern) | A profile saves and survives a refresh |
+| 5. Port the shell (sidebar/tabs) + company CRUD + company form (RHF pattern) | A company saves and survives a refresh |
 | 6. Move the infra engine into `features/infrastructure/{config,engine}` with tests | Engine tests pass, and the wizard shows the live weights |
 | 7. Deploy (Vercel `sin1`, GitHub Action) | A teammate's merged PR deploys |
 
@@ -301,7 +301,7 @@ After step 5, the other three members can port their modules into `features/<mod
 **End-to-end flow:**
 
 ```
-Company profile (shared form)            → Company row
+Company (shared form)                    → Company row
   │
   ▼  /companies/[id]/infrastructure  (one React Hook Form for the whole wizard)
 1 Context step     infra-only extras (users, budget, location, current setup …)

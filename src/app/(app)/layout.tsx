@@ -1,7 +1,7 @@
 import { AppSidebar } from "@/components/shared/app-sidebar";
 import { requireUser } from "@/lib/dal";
 import { UserMenu } from "@/features/auth/components/user-menu";
-import { listCompanies } from "@/features/profile/data";
+import { listCompanies } from "@/features/company/data";
 
 export default async function AppLayout({ children }: LayoutProps<"/">) {
   // For the sidebar only. Each page still checks access through its data.ts calls.

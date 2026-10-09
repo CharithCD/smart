@@ -1,6 +1,6 @@
 # Conventions: folders, naming and code style
 
-Everyone follows this file. If something isn't covered here, copy what `features/profile` does. If that doesn't answer it, ask in the group and add the answer here.
+Everyone follows this file. If something isn't covered here, copy what `features/company` does. If that doesn't answer it, ask in the group and add the answer here.
 
 **The rule behind all the others:** a teammate who has never seen a file should understand it in 10 seconds. When in doubt, write the plain, obvious version.
 
@@ -29,7 +29,7 @@ smart-app/
    │  └─ shared/                # our own components: buttons, fields, dialogs, page header
    ├─ features/                 # ALL real code lives here
    │  ├─ auth/
-   │  ├─ profile/               # companies (the example every feature copies)
+   │  ├─ company/               # companies (the example every feature copies)
    │  ├─ knowledge/             # admin document uploads
    │  └─ infrastructure/  marketing/  compliance/  product/
    ├─ generated/                # Prisma client, git-ignored
@@ -75,7 +75,7 @@ When you create a new feature folder, add its name to `FEATURES` in `eslint.conf
 
 ### Import rules
 
-- A feature never imports from another feature. **Exception:** everyone may import `@/features/profile/options` and `@/features/profile/schema`, because the company profile is shared. _(Checked by ESLint.)_
+- A feature never imports from another feature. **Exception:** everyone may import `@/features/company/options` and `@/features/company/schema`, because the company is shared. _(Checked by ESLint.)_
 - Always import with `@/…`. Never use `../`. _(Checked by ESLint.)_ `./` for a file in the same folder is fine.
 - Pages and features never import the shadcn parts that have a shared version (see "Shared components"). _(Checked by ESLint.)_
 - Components never import `data.ts` or `lib/db.ts`. _(The `import "server-only"` line makes the build fail.)_
@@ -210,8 +210,8 @@ import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { CompanySchema, type CompanyInput } from "@/features/profile/schema";
-import { createCompanyAction, updateCompanyAction } from "@/features/profile/actions";
+import { CompanySchema, type CompanyInput } from "@/features/company/schema";
+import { createCompanyAction, updateCompanyAction } from "@/features/company/actions";
 
 type Props = { companyId?: string; defaultValues?: CompanyInput };
 
@@ -240,9 +240,9 @@ export function CompanyForm({ companyId, defaultValues }: Props) {
 
 ```tsx
 // app/(app)/companies/[companyId]/edit/page.tsx
-import { getCompany } from "@/features/profile/data";
-import { CompanySchema } from "@/features/profile/schema";
-import { CompanyForm } from "@/features/profile/components/company-form";
+import { getCompany } from "@/features/company/data";
+import { CompanySchema } from "@/features/company/schema";
+import { CompanyForm } from "@/features/company/components/company-form";
 
 export default async function EditCompanyPage({
   params,

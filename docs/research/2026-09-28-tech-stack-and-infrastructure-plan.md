@@ -13,7 +13,7 @@
 2. **A server is required, not optional.** Google's SDK README says to "avoid exposing API keys in client-side code", and Vite bundles any `VITE_*` variable into the browser. The Gemini and Pinecone keys therefore have to live on the server.
 3. **The core concept is "rules are data, the engine is a pure function, the LLM only writes prose."** Criteria, weights, multipliers, questions, thresholds and reference prices live in plain TypeScript/JSON data files. Each entry records where it came from. A pure `assess()` function turns context + answers into scores, gaps and plan items. Gemini only turns that result into readable text. This design is what makes κ/MAE evaluation reproducible and lets non-developers edit weights.
 4. **Use one folder per module (`shared/infrastructure/`, `src/features/infrastructure/`)** plus a shared `ModuleResult` contract for the dashboard. Each member then works in their own folder and merge conflicts become rare.
-5. **The prototype has integration problems to fix first.** It is not a git repo. The profile form and the infrastructure module use different values for the same fields ("Pre-launch" vs `prelaunch`, "B2B SaaS" vs `saas`). The infrastructure context is hard-coded rather than read from the profile. Criteria are self-rated 0–5 instead of being scored from specific questions. Nothing is saved. TypeScript is not strict (21 `any`), and 16 class names use hard-coded hex colours.
+5. **The prototype has integration problems to fix first.** It is not a git repo. The company form and the infrastructure module use different values for the same fields ("Pre-launch" vs `prelaunch`, "B2B SaaS" vs `saas`). The infrastructure context is hard-coded rather than read from the company. Criteria are self-rated 0–5 instead of being scored from specific questions. Nothing is saved. TypeScript is not strict (21 `any`), and 16 class names use hard-coded hex colours.
 6. **Gemini facts that changed recently:** the current stable text model is `gemini-3.8-flash`. The **Interactions API** (`ai.interactions.create`) is the recommended API, and `generateContent` is "legacy" but still supported. The Gemini **free tier lets Google use prompts and responses and have humans review them**. We must therefore send only anonymised, scored data to Gemini and never company names. This also supports the ethics section.
 7. **Build in 8 short iterations.** The first four (foundation, N1 engine, questions, persistence) need no AI at all. RAG and Gemini come after the scoring is correct and tested, and evaluation tooling (scenario runner, MAE/κ script, CSV export) is built into the app rather than done by hand in spreadsheets.
 
@@ -60,14 +60,14 @@
 ```
 Browser (React)                         Server (Express, holds all keys)
 ─────────────────                       ─────────────────────────────────
-Company profile form ─┐                 POST /api/companies
+Company form ─────────┐                 POST /api/companies
 Infra: context step   │   fetch /api    POST /api/assessments/infrastructure
 Infra: questions      ├───────────────▶   └─ shared/infrastructure/engine.ts  ← pure, deterministic, <3 s
 Infra: results        │                 POST /api/assessments/:id/report
 Dashboard            ─┘                   ├─ rag.ts   → Gemini embed → Pinecone query
                                           └─ gemini.ts → Gemini text (JSON) → zod check → fallback
 shared/ (imported by BOTH sides)         SQLite: data/app.db
-  types, profile enums, engine, config   data/reference/*.json (TRCSL, DCs, hardware)
+  types, company enums, engine, config   data/reference/*.json (TRCSL, DCs, hardware)
 ```
 
 The engine lives in `shared/`, so the browser can show a live preview while the user answers. The **server re-runs the same function** when saving, and its result is the one that gets stored. The engine never imports anything from `server/llm`, which enforces "no LLM in the scoring path" in the code structure itself.
@@ -85,14 +85,14 @@ smart/
 │  ├─ layout/                        # Sidebar, Tabs, … (existing)
 │  ├─ lib/api.ts                     # tiny fetch wrapper: api.get / api.post
 │  └─ features/
-│     ├─ profile/                    # shared company profile (everyone depends on this)
+│     ├─ company/                    # shared company (everyone depends on this)
 │     ├─ dashboard/                  # combines the 4 ModuleResults
 │     ├─ infrastructure/             # ← you
 │     │  ├─ InfrastructurePage.tsx   # step switcher only
 │     │  ├─ ContextStep.tsx  NeedsStep.tsx  QuestionsStep.tsx  ResultsStep.tsx
 │     ├─ marketing/  compliance/  product/
 ├─ shared/                           # pure TS, no React, no Node APIs
-│  ├─ profile.ts                     # ONE set of enums for stage, productType, operatingMode …
+│  ├─ company.ts                     # ONE set of enums for stage, productType, operatingMode …
 │  ├─ moduleResult.ts                # contract every module returns to the dashboard
 │  └─ infrastructure/
 │     ├─ criteria.ts   weights.ts   rules.ts   questions.ts   # DATA — editable by researchers
@@ -120,7 +120,7 @@ smart/
        factor: 1.3, why: 'Rural grid/ISP reliability — interview theme T4; Nagahawatte & Wijayanayake 2025' },
    ];
    ```
-2. **The engine is a pure function.** `assess(profile, context, answers, config) → InfraResult`. It does no `fetch`, no `Date.now()`, no randomness and no LLM calls. Same input gives the same output, which is what κ/MAE need.
+2. **The engine is a pure function.** `assess(company, context, answers, config) → InfraResult`. It does no `fetch`, no `Date.now()`, no randomness and no LLM calls. Same input gives the same output, which is what κ/MAE need.
 3. **Every stored result is reproducible.** Save `inputs`, `result`, `engineVersion` (bump it when weights or rules change) and, for reports, `model` + `promptVersion`.
 4. **The LLM only writes prose.** Scores, gaps, priorities and costs shown on screen always come from the engine result, never from LLM text. If Gemini fails or returns invalid JSON, the page shows the deterministic template text (the prototype's `buildScalabilityNarrative` already does this).
 5. **Reference data carries its source.** Every price or spec has `{ value, unit, source, sourceUrl, retrievedOn, peerReviewed }`. This directly answers the methodology rule that "non-peer-reviewed sources are used only for context and pricing, and are labelled as such."
@@ -128,7 +128,7 @@ smart/
 #### 2.3 Coding standards (short on purpose)
 
 - **TypeScript `strict: true`.** No `any` in `shared/`. Use `unknown` + zod at the edges.
-- **One shared profile.** Stage, product type, operating mode and similar fields come from `shared/profile.ts`. Modules *read* the company profile and ask only for module-specific extras. They never re-ask profile fields with different option values.
+- **One shared company.** Stage, product type, operating mode and similar fields come from `shared/company.ts`. Modules *read* the company and ask only for module-specific extras. They never re-ask company fields with different option values.
 - **Components stay small**, around 200 lines at most, with one step per file. Repeated input markup goes into `components/ui` (the prototype copies `NumInput`/`TextInput`/`Section` into each module).
 - **Money is in LKR integers, and dates are ISO strings.** Criterion IDs are `snake_case` (as they already are).
 - **Server routes are thin:** validate with zod → call the engine or DB → return JSON. Errors come back as `{ error: string }` with a proper status.
@@ -159,7 +159,7 @@ smart/
 
 | Methodology stage | Code | Output |
 |---|---|---|
-| 1. Company Context | `profile` (shared) + `ContextStep` (infra extras: operating mode, users now/launch/1yr, traffic, budgets, province, urban/rural, current internet/hosting/hardware/power, growth, deployment preference) | `InfraContext` |
+| 1. Company Context | `company` (shared) + `ContextStep` (infra extras: operating mode, users now/launch/1yr, traffic, budgets, province, urban/rural, current internet/hosting/hardware/power, growth, deployment preference) | `InfraContext` |
 | 2. Determine Infrastructure Needs | `engine.applicability()` + `engine.weights()` | 14 criteria → applicable set + final weights, each with reasons |
 | 3. Show Relevant Questions | `questions.ts` filtered by applicable criteria and `showIf(ctx)` | 2–4 concrete questions per criterion |
 | 4. Calculate Readiness | `engine.score()` | criterion scores (0–5), physical/digital/overall (0–100), gaps, priority order |
@@ -211,7 +211,7 @@ The criterion score is the average of its answered question points, giving 0–5
 #### 3.6 Data model (SQLite, 3 tables, JSON columns)
 
 ```sql
-CREATE TABLE companies   (id TEXT PRIMARY KEY, profile_json TEXT NOT NULL, created_at TEXT NOT NULL) STRICT;
+CREATE TABLE companies   (id TEXT PRIMARY KEY, details_json TEXT NOT NULL, created_at TEXT NOT NULL) STRICT;
 CREATE TABLE assessments (id TEXT PRIMARY KEY, company_id TEXT NOT NULL, module TEXT NOT NULL,
                           inputs_json TEXT NOT NULL, result_json TEXT NOT NULL,
                           engine_version TEXT NOT NULL, created_at TEXT NOT NULL) STRICT;
@@ -233,16 +233,16 @@ Every module uses the same tables, and the `module` column separates them. Modul
 
 | # | Iteration | Done when |
 |---|---|---|
-| 0 | **Foundation.** Git init, Node 24.15+, strict TS, Prettier, Vitest, folder restructure, `shared/profile.ts` enums, Express 5 + SQLite skeleton, Vite proxy, README | `npm run dev` runs both halves, and `npm run check` is green |
+| 0 | **Foundation.** Git init, Node 24.15+, strict TS, Prettier, Vitest, folder restructure, `shared/company.ts` enums, Express 5 + SQLite skeleton, Vite proxy, README | `npm run dev` runs both halves, and `npm run check` is green |
 | 1 | **N1 engine.** Move criteria/weights/rules into `shared/infrastructure` with `why` fields, pure `assess()`, points-lost priority, 5+ golden scenarios | Tests pass, and changing a weight changes only data + snapshots |
-| 2 | **Questions.** `questions.ts` for all 14 criteria + generic `QuestionsStep`, and the context step reads the saved profile | Criterion scores come from answers, and no profile field is asked twice |
+| 2 | **Questions.** `questions.ts` for all 14 criteria + generic `QuestionsStep`, and the context step reads the saved company | Criterion scores come from answers, and no company field is asked twice |
 | 3 | **Persistence + dashboard contract.** Company and assessment API, `ModuleResult`, cards show real status/score | A refresh keeps data, and the dashboard shows the infra score |
 | 4 | **N4 plan.** Plan rules, the three reference-data JSON files with sources, budget check, results page | The plan lists items with horizon, cost range and source |
 | 5 | **RAG + Gemini report.** Ingest/query, prompt, zod-validated JSON, fallback, cache | The report renders, and turning off the API key still gives a template report |
 | 6 | **Evaluation tooling.** Scenario runner, `evaluate.ts` (MAE, κ), CSV export, timing log | One command prints MAE/κ against a sample expert CSV |
 | 7 | **Content validity loop + deploy.** Apply the expert panel's edits (data-only), redeploy for SUS/usability sessions | Experts' revisions are merged, and the app is reachable by test users |
 
-Iterations 0 and 3 touch shared code (`profile.ts`, `moduleResult.ts`, the dashboard), so **agree on them with the other three members first**. Everything else is inside the infrastructure folders.
+Iterations 0 and 3 touch shared code (`company.ts`, `moduleResult.ts`, the dashboard), so **agree on them with the other three members first**. Everything else is inside the infrastructure folders.
 
 ---
 

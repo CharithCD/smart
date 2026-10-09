@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteCompanyAction } from "@/features/profile/actions";
+import { deleteCompanyAction } from "@/features/company/actions";
 
 // Rare actions for a company, kept out of the way behind a "⋯" button.
 type Props = { companyId: string; companyName: string };

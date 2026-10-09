@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { AppButton } from "@/components/shared/app-button";
 import { PageHeader } from "@/components/shared/page-header";
-import { ModuleIcon } from "@/features/profile/components/module-icon";
-import { MODULE_DESCRIPTIONS, MODULE_LABELS, MODULES } from "@/features/profile/options";
+import { ModuleIcon } from "@/features/company/components/module-icon";
+import { MODULE_DESCRIPTIONS, MODULE_LABELS, MODULES } from "@/features/company/options";
 
 // What a founder sees before they have a company: what the app does and the one next step.
 export function CompanyWelcome() {

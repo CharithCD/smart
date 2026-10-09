@@ -1,5 +1,5 @@
-import { ModuleIcon } from "@/features/profile/components/module-icon";
-import { MODULE_DESCRIPTIONS, MODULE_LABELS, MODULES } from "@/features/profile/options";
+import { ModuleIcon } from "@/features/company/components/module-icon";
+import { MODULE_DESCRIPTIONS, MODULE_LABELS, MODULES } from "@/features/company/options";
 
 // The company's four assessments. They become links when each module is built (Phase 7).
 export function ModuleCards() {
