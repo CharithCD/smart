@@ -18,14 +18,15 @@ export function CompanyList({ companies }: Props) {
     return <p className="text-muted-foreground">No companies yet. Add your first one to start.</p>;
   }
 
+  // On phones only name and stage show, so the table fits without scrolling sideways.
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead>Name</TableHead>
           <TableHead>Stage</TableHead>
-          <TableHead>Product type</TableHead>
-          <TableHead>Added</TableHead>
+          <TableHead className="hidden sm:table-cell">Product type</TableHead>
+          <TableHead className="hidden sm:table-cell">Added</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -40,8 +41,12 @@ export function CompanyList({ companies }: Props) {
               </Link>
             </TableCell>
             <TableCell>{STAGE_LABELS[company.stage]}</TableCell>
-            <TableCell>{PRODUCT_TYPE_LABELS[company.productType]}</TableCell>
-            <TableCell>{company.createdAt.toLocaleDateString("en-GB")}</TableCell>
+            <TableCell className="hidden sm:table-cell">
+              {PRODUCT_TYPE_LABELS[company.productType]}
+            </TableCell>
+            <TableCell className="hidden sm:table-cell">
+              {company.createdAt.toLocaleDateString("en-GB")}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

@@ -31,7 +31,9 @@ export function LoginForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Log in</CardTitle>
+        <CardTitle>
+          <h1 className="text-xl font-semibold">Log in</h1>
+        </CardTitle>
         <CardDescription>Welcome back to Smart</CardDescription>
       </CardHeader>
       <CardContent>

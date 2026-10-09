@@ -37,7 +37,11 @@ export function CompanyDetails({ company }: Props) {
       {rows.map((row) => (
         <div key={row.label} className="rounded-lg border p-4">
           <dt className="text-sm text-muted-foreground">{row.label}</dt>
-          <dd className="mt-1 font-medium">{row.value || "Not set"}</dd>
+          {row.value ? (
+            <dd className="mt-1 font-medium">{row.value}</dd>
+          ) : (
+            <dd className="mt-1 text-muted-foreground">Not set</dd>
+          )}
         </div>
       ))}
     </dl>

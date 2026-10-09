@@ -31,7 +31,9 @@ export function SignupForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sign up</CardTitle>
+        <CardTitle>
+          <h1 className="text-xl font-semibold">Sign up</h1>
+        </CardTitle>
         <CardDescription>Create an account to assess your company</CardDescription>
       </CardHeader>
       <CardContent>
