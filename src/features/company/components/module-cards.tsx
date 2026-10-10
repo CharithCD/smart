@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ModuleIcon } from "@/features/company/components/module-icon";
+import { ModuleIcon } from "@/components/shared/module-icon";
 import { MODULE_DESCRIPTIONS, MODULE_LABELS, MODULES } from "@/features/company/options";
 
 // Modules that have a page. Add yours when its page exists (see features/README.md).
