@@ -167,6 +167,15 @@
     @apply font-sans;
   }
 
+  /* The parts the browser draws itself, in the brand colours */
+  ::selection {
+    @apply bg-lilac-200 text-neutral-900;
+  }
+  input,
+  textarea {
+    @apply caret-lilac-400;
+  }
+
   /* shadcn controls are 32px, which is fine with a mouse but under the 44px finger-sized
      minimum. On touch screens only, every button, field and menu item grows to 44px.
      Buttons are matched by data-variant + data-size because a Button inside a trigger

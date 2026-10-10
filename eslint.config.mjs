@@ -7,6 +7,7 @@ const FEATURES = [
   "auth",
   "company",
   "knowledge",
+  "landing",
   "infrastructure",
   "marketing",
   "compliance",
