@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-09T00:00:00Z",
+  "generatedAt": "2026-10-10T00:00:00Z",
   "title": "Design System: Smart",
   "extensions": {
     "colorMeta": {
@@ -74,7 +74,8 @@
         "role": "tertiary",
         "displayName": "Compliance Lavender (tile)",
         "canonical": "#d2c5ef",
-        "tonalRamp": ["#a08cd0", "#b9a8e0", "#d2c5ef", "#f4f2fc"]
+        "tonalRamp": ["#a08cd0", "#b9a8e0", "#d2c5ef", "#f4f2fc"],
+        "purpose": "Compliance tile."
       },
       "lime-300": {
         "role": "tertiary",
@@ -88,18 +89,46 @@
         "canonical": "#daf06b",
         "tonalRamp": ["#c3d100", "#cfe035", "#daf06b", "#e6ffa0"]
       },
-      "neutral-0": { "role": "neutral", "displayName": "Paper", "canonical": "#ffffff" },
-      "neutral-50": { "role": "neutral", "displayName": "Mist", "canonical": "#f9f9f9" },
-      "neutral-100": { "role": "neutral", "displayName": "Fog", "canonical": "#f4f4f4" },
+      "neutral-0": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#ffffff"
+      },
+      "neutral-50": {
+        "role": "neutral",
+        "displayName": "Mist",
+        "canonical": "#f9f9f9"
+      },
+      "neutral-100": {
+        "role": "neutral",
+        "displayName": "Fog",
+        "canonical": "#f4f4f4"
+      },
       "neutral-200": {
         "role": "neutral",
         "displayName": "Hairline (panel)",
         "canonical": "#ededed"
       },
-      "neutral-300": { "role": "neutral", "displayName": "Hairline", "canonical": "#dcdcdc" },
-      "neutral-550": { "role": "neutral", "displayName": "Field Edge", "canonical": "#949494" },
-      "neutral-600": { "role": "neutral", "displayName": "Quiet Text", "canonical": "#6c6c6c" },
-      "neutral-700": { "role": "neutral", "displayName": "Soft Text", "canonical": "#5c5c5c" },
+      "neutral-300": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#dcdcdc"
+      },
+      "neutral-550": {
+        "role": "neutral",
+        "displayName": "Field Edge",
+        "canonical": "#949494"
+      },
+      "neutral-600": {
+        "role": "neutral",
+        "displayName": "Quiet Text",
+        "canonical": "#6c6c6c"
+      },
+      "neutral-700": {
+        "role": "neutral",
+        "displayName": "Soft Text",
+        "canonical": "#5c5c5c"
+      },
       "destructive": {
         "role": "neutral",
         "displayName": "Danger",
@@ -109,16 +138,28 @@
     "typographyMeta": {
       "headline": {
         "displayName": "Headline",
-        "purpose": "The one page title via PageHeader; 24px on phones, 30px from sm."
+        "purpose": "The one page title via PageHeader; 24px on phones, 30px from sm. The landing hero h1 is the one exception: hand-made, 36px on phones, 48px from lg."
       },
-      "title": { "displayName": "Title", "purpose": "Section headings and the FormPanel heading." },
-      "body": { "displayName": "Body", "purpose": "Default text, field text, button labels." },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section headings and the FormPanel heading."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default text, field text, button labels."
+      },
       "body-small": {
         "displayName": "Body small",
         "purpose": "Card descriptions, status lines, nav items."
       },
-      "label": { "displayName": "Label", "purpose": "Field labels and choice group legends." },
-      "wordmark": { "displayName": "Wordmark", "purpose": "Lowercase 'smart' in the logo only." },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Field labels, choice group legends, admin tabs and filter pills."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "Lowercase 'smart' in the logo only."
+      },
       "numeric": {
         "displayName": "Numeric",
         "purpose": "Geist Mono, tabular figures: scores, LKR amounts, source numbers only."
@@ -130,13 +171,30 @@
         "name": "colors",
         "value": "color, background-color, border-color 150ms cubic-bezier(0.4, 0, 0.2, 1)",
         "purpose": "Hover and selected changes on nav items, choice cards and buttons."
+      },
+      {
+        "name": "square-fill",
+        "value": "transform 500ms cubic-bezier(0.16, 1, 0.3, 1); score opacity 300ms cubic-bezier(0.16, 1, 0.3, 1) 150ms delay",
+        "purpose": "Landing StoryMark only: a module square's colour scales 0 to 1 from the centre and its score fades in when its step passes mid-screen; reverses on scroll up; off under prefers-reduced-motion."
       }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "640px" },
-      { "name": "md", "value": "768px" },
-      { "name": "lg", "value": "1024px" },
-      { "name": "xl", "value": "1280px" }
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
     ]
   },
   "components": [
@@ -200,9 +258,57 @@
       "name": "Logo Mark",
       "kind": "custom",
       "refersTo": "module-icon-infrastructure",
-      "description": "AppLogo: 2x2 module squares (blue, yellow, lilac, lime at 300) plus lowercase bold wordmark.",
+      "description": "AppLogo: 2x2 module squares (blue, yellow, lilac, lime at 300) plus lowercase bold wordmark. Links to /companies by default; optional href (the landing page passes /).",
       "html": "<a class=\"ds-logo\" href=\"#\"><span class=\"ds-logo-grid\"><span style=\"background:#66afea\"></span><span style=\"background:#feca00\"></span><span style=\"background:#a08cd0\"></span><span style=\"background:#c3d100\"></span></span><span class=\"ds-logo-word\">smart</span></a>",
       "css": ".ds-logo { display: flex; align-items: center; gap: 8px; height: 44px; width: fit-content; text-decoration: none; } .ds-logo-grid { display: grid; grid-template-columns: repeat(2, 10px); gap: 2px; } .ds-logo-grid span { width: 10px; height: 10px; border-radius: 3px; } .ds-logo-word { font: 700 20px Geist, ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.05em; color: #3c3c3c; }"
+    },
+    {
+      "name": "Progress Mark",
+      "kind": "custom",
+      "refersTo": "progress-square-lg",
+      "description": "ProgressMark: the logo grid showing which modules are there. Filled = module 300, empty = 1.5px neutral-300 outline. sm 10px/3px, lg 28px/7px. Also on landing step headers (phones) and the landing close panel.",
+      "html": "<div class=\"ds-pm-row\"><span class=\"ds-pm ds-pm-lg\"><span style=\"background:#66afea\"></span><span style=\"background:#feca00\"></span><span class=\"ds-pm-empty\"></span><span style=\"background:#c3d100\"></span></span><span class=\"ds-pm ds-pm-sm\"><span style=\"background:#66afea\"></span><span class=\"ds-pm-empty\"></span><span class=\"ds-pm-empty\"></span><span class=\"ds-pm-empty\"></span></span></div>",
+      "css": ".ds-pm-row { display: flex; align-items: center; gap: 24px; } .ds-pm { display: grid; grid-template-columns: repeat(2, auto); width: fit-content; } .ds-pm-sm { gap: 2px; } .ds-pm-sm span { width: 10px; height: 10px; border-radius: 3px; } .ds-pm-lg { gap: 6px; } .ds-pm-lg span { width: 28px; height: 28px; border-radius: 7px; } .ds-pm .ds-pm-empty { box-sizing: border-box; background: #ffffff; border: 1.5px solid #dcdcdc; }"
+    },
+    {
+      "name": "Story Mark",
+      "kind": "custom",
+      "refersTo": "story-square-lg",
+      "description": "Landing StoryMark: the logo grid at page size (md 96px, lg 144px / 160px from xl), 25% corners. Empty = 1.5px neutral-300 outline; filled = module 300 with the example score in Geist Mono. Module names sit outside the squares. Captioned 'Example · N of 4 modules scored'.",
+      "html": "<div class=\"ds-sm\"><div class=\"ds-sm-cell\"><span class=\"ds-sm-name\">Infrastructure</span><span class=\"ds-sm-sq\" style=\"background:#66afea;border-color:transparent\">62</span></div><div class=\"ds-sm-cell\"><span class=\"ds-sm-name\">Marketing</span><span class=\"ds-sm-sq\" style=\"background:#feca00;border-color:transparent\">48</span></div><div class=\"ds-sm-cell ds-sm-bottom\"><span class=\"ds-sm-name ds-sm-empty-name\">Compliance</span><span class=\"ds-sm-sq\"></span></div><div class=\"ds-sm-cell ds-sm-bottom\"><span class=\"ds-sm-name ds-sm-empty-name\">Product</span><span class=\"ds-sm-sq\"></span></div></div>",
+      "css": ".ds-sm { display: grid; grid-template-columns: repeat(2, auto); gap: 20px; width: fit-content; } .ds-sm-cell { display: flex; flex-direction: column; gap: 8px; } .ds-sm-bottom { flex-direction: column-reverse; } .ds-sm-name { font: 500 14px Geist, ui-sans-serif, system-ui, sans-serif; color: #3c3c3c; } .ds-sm-empty-name { color: #6c6c6c; } .ds-sm-sq { box-sizing: border-box; display: flex; align-items: center; justify-content: center; width: 96px; height: 96px; border-radius: 25%; border: 1.5px solid #dcdcdc; background: #ffffff; font: 500 24px 'Geist Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; color: #3c3c3c; }"
+    },
+    {
+      "name": "Coverage Ledger Row",
+      "kind": "card",
+      "refersTo": "coverage-panel",
+      "description": "ModuleCoverage row: icon tile, name, one module square per document (max 12, then +N), breakdown, Mono count, chevron. Counts are squares, never full bars.",
+      "html": "<a class=\"ds-cov\" href=\"#\"><span class=\"ds-cov-tile\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"20\" height=\"8\" x=\"2\" y=\"2\" rx=\"2\"/><rect width=\"20\" height=\"8\" x=\"2\" y=\"14\" rx=\"2\"/><line x1=\"6\" x2=\"6.01\" y1=\"6\" y2=\"6\"/><line x1=\"6\" x2=\"6.01\" y1=\"18\" y2=\"18\"/></svg></span><span class=\"ds-cov-name\">Infrastructure</span><span class=\"ds-cov-mid\"><span class=\"ds-cov-sq\"><i></i><i></i><i></i></span><span class=\"ds-cov-kinds\">2 papers · 1 guide</span></span><span class=\"ds-cov-count\">3<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#949494\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m9 18 6-6-6-6\"/></svg></span></a>",
+      "css": ".ds-cov { display: grid; grid-template-columns: auto 11rem 1fr auto; align-items: center; gap: 16px; width: 640px; padding: 16px 24px; border: 1px solid #dcdcdc; border-radius: 22.4px; background: #ffffff; color: #3c3c3c; text-decoration: none; font-family: Geist, ui-sans-serif, system-ui, sans-serif; transition: background-color 150ms; outline: none; } .ds-cov:hover, .ds-cov:focus-visible { background: #f9f9f9; } .ds-cov:focus-visible { box-shadow: inset 0 0 0 2px #6d51ab; } .ds-cov-tile { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 16px; background: #bfe2fb; } .ds-cov-name { font-weight: 700; } .ds-cov-mid { display: flex; flex-direction: column; gap: 8px; } .ds-cov-sq { display: flex; gap: 4px; } .ds-cov-sq i { width: 10px; height: 10px; border-radius: 3px; background: #66afea; } .ds-cov-kinds { font-size: 14px; color: #6c6c6c; } .ds-cov-count { display: flex; align-items: center; gap: 8px; font: 500 18px 'Geist Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Filter Pill",
+      "kind": "chip",
+      "refersTo": "filter-pill",
+      "description": "ModuleFilter link: module square, label, Mono count. Active = charcoal fill, white text.",
+      "html": "<nav class=\"ds-pills\"><a class=\"ds-pill ds-pill-active\" href=\"#\">All<span class=\"ds-pill-n\">9</span></a><a class=\"ds-pill\" href=\"#\"><span class=\"ds-pill-sq\" style=\"background:#feca00\"></span>Marketing<span class=\"ds-pill-n\">2</span></a></nav>",
+      "css": ".ds-pills { display: flex; gap: 8px; font-family: Geist, ui-sans-serif, system-ui, sans-serif; } .ds-pill { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 1px solid #dcdcdc; border-radius: 22.4px; color: #5c5c5c; font-size: 14px; font-weight: 500; text-decoration: none; transition: border-color 150ms, color 150ms; outline: none; } .ds-pill:hover { border-color: #949494; color: #3c3c3c; } .ds-pill:focus-visible { box-shadow: 0 0 0 3px rgb(109 81 171 / 0.5); } .ds-pill-sq { width: 10px; height: 10px; border-radius: 3px; } .ds-pill-n { font-family: 'Geist Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; color: #6c6c6c; } .ds-pill-active, .ds-pill-active:hover { background: #3c3c3c; border-color: #3c3c3c; color: #ffffff; } .ds-pill-active .ds-pill-n { color: #dcdcdc; }"
+    },
+    {
+      "name": "File Drop Zone",
+      "kind": "input",
+      "refersTo": "file-drop-zone",
+      "description": "FileField empty state: dashed Field Edge zone, Fog icon tile; solid lilac border on Lilac Wash while dragging.",
+      "html": "<label class=\"ds-drop\"><span class=\"ds-drop-tile\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#5c5c5c\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3v12\"/><path d=\"m17 8-5-5-5 5\"/><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/></svg></span><span>Drag a file here or <u>browse</u></span></label>",
+      "css": ".ds-drop { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 420px; padding: 40px 16px; border: 1px dashed #949494; border-radius: 16px; background: #ffffff; color: #3c3c3c; font: 400 16px Geist, ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background-color 150ms, border-color 150ms; } .ds-drop:hover { border-color: #6c6c6c; background: #f9f9f9; } .ds-drop:active { border-style: solid; border-color: #6d51ab; background: #f4f2fc; } .ds-drop u { font-weight: 500; } .ds-drop-tile { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 16px; background: #f4f4f4; }"
+    },
+    {
+      "name": "Admin Tab",
+      "kind": "nav",
+      "refersTo": "nav-tab-active",
+      "description": "AdminNav: Admin chip plus tabs styled like sidebar items; active on Lilac Wash.",
+      "html": "<nav class=\"ds-admin\"><span class=\"ds-admin-chip\">Admin</span><a class=\"ds-tab ds-tab-active\" href=\"#\">Overview</a><a class=\"ds-tab\" href=\"#\">Documents</a></nav>",
+      "css": ".ds-admin { display: flex; align-items: center; gap: 4px; font-family: Geist, ui-sans-serif, system-ui, sans-serif; } .ds-admin-chip { margin-right: 12px; padding: 4px 8px; border-radius: 12.8px; background: #f4f4f4; color: #5c5c5c; font-size: 12px; font-weight: 600; } .ds-tab { display: flex; align-items: center; height: 44px; padding: 0 16px; border-radius: 22.4px; color: #5c5c5c; font-size: 14px; font-weight: 500; text-decoration: none; transition: background-color 150ms, color 150ms; outline: none; } .ds-tab:hover { background: #f4f4f4; color: #3c3c3c; } .ds-tab:focus-visible { box-shadow: 0 0 0 3px rgb(109 81 171 / 0.5); } .ds-tab-active, .ds-tab-active:hover { background: #f4f2fc; color: #3c3c3c; }"
     }
   ],
   "narrative": {
@@ -240,7 +346,7 @@
       },
       {
         "name": "The Bold Not Big Rule",
-        "body": "Hierarchy comes from weight (700) and a short size step, not from huge display type. The largest text in the app is the 30px page title.",
+        "body": "Hierarchy comes from weight (700) and a short size step, not from huge display type. The largest text in the app is the 30px page title. The one exception is the logged-out landing page: its hero headline is 36px, 48px from lg. App, auth and admin pages still top out at 30px.",
         "section": "typography"
       },
       {
@@ -250,17 +356,22 @@
       }
     ],
     "dos": [
-      "Do build every screen from the shared components (`AppButton`, `TextField`, `ChoiceField`, `ConfirmDialog`, `PageHeader`, `FormPanel`).",
+      "Do build every screen from the shared components (`AppButton`, `TextField`, `ChoiceField`, `ConfirmDialog`, `PageHeader`, `FormPanel`). The landing hero headline is the one hand-made page heading.",
       "Do keep module colours in module order: Infrastructure blue, Marketing yellow, Compliance lilac, Product lime.",
-      "Do use the 100 shade for module tiles and backgrounds, and the 300 shade for the mark and score bars.",
+      "Do use the 100 shade for module tiles and backgrounds, and the 300 shade for the marks, module squares and score bars.",
+      "Do show counts as module squares (one per item, then \"+N\") and a Mono number, not as full-width bars.",
+      "Do use `ProgressMark` and `MODULE_STRONG_COLOURS` for module squares instead of writing the colour classes again.",
       "Do use lilac-400 for focus and interaction, and charcoal (neutral-900) for primary actions and selected states.",
       "Do keep touch targets at least 44px and fields and choice cards 56px.",
       "Do show unset values as \"Not set\" in Quiet Text (neutral-600), not as a dash or blank.",
       "Do put Geist Mono with tabular figures on scores, LKR amounts and source numbers.",
-      "Do check every screen at 390px and at laptop width."
+      "Do check every screen at 390px and at laptop width.",
+      "Do label sample data as \"Example\" when it shows before a user has real data."
     ],
     "donts": [
       "Don't use module colours for decoration, status or generic charts.",
+      "Don't use module yellow for warnings or notices; use a neutral bordered notice with an icon.",
+      "Don't draw a count as a bar. A full bar reads as a top score, and one document is not \"complete\".",
       "Don't write hex colours in classes; add a token to `globals.css` instead.",
       "Don't add shadows to cards or panels.",
       "Don't use Geist Mono for labels, headings or anything that is not a compared number.",

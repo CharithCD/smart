@@ -43,3 +43,9 @@ next-env.d.ts
 
 # prisma
 /src/generated/
+
+# design hook cache
+.impeccable/hook.cache.json
+
+# playwright test output
+.playwright-mcp/
