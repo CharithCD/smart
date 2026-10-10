@@ -10,17 +10,18 @@ datasource db {
 // User, Session, Account and Verification come from `npx auth@latest generate` (Better Auth).
 
 model User {
-  id            String    @id
+  id            String     @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean    @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  role          String    @default("founder")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  role          String     @default("founder")
   sessions      Session[]
   accounts      Account[]
   companies     Company[]
+  documents     Document[]
 
   @@unique([email])
   @@map("user")
@@ -90,4 +91,22 @@ model Company {
   updatedAt       DateTime @updatedAt
 
   @@index([ownerId])
+}
+
+// A published source an admin uploaded for the modules' RAG. The file itself is in Vercel Blob.
+model Document {
+  id         String   @id @default(cuid())
+  title      String
+  // Ids from features/knowledge/options.ts
+  module     String // infrastructure | marketing | compliance | product | shared
+  sourceType String // peer_reviewed | government | provider | other
+  sourceUrl  String?
+  fileName   String
+  blobUrl    String
+  status     String   @default("uploaded") // uploaded → processed (later, when we embed into Pinecone)
+  addedById  String
+  addedBy    User     @relation(fields: [addedById], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
 }

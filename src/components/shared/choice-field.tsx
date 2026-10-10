@@ -27,7 +27,9 @@ export function ChoiceField({ name, label, ids, labels, value, onChange, error }
       <div className="@container">
         <RadioGroup
           value={value ?? ""}
-          onValueChange={onChange}
+          // form.reset() also resets the <form>, and Radix reports that as "". Passing it on
+          // would mark the field invalid straight after a successful submit.
+          onValueChange={(next) => next && onChange(next)}
           className={cn("grid-cols-1 gap-3 @sm:grid-cols-2", hasThree && "@md:grid-cols-3")}
         >
           {ids.map((id) => (

@@ -11,7 +11,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex flex-1 flex-col md:flex-row">
       <AppSidebar companies={companies}>
-        <UserMenu name={user.name} email={user.email} />
+        <UserMenu name={user.name} email={user.email} isAdmin={user.role === "admin"} />
       </AppSidebar>
       <main className="mx-auto w-full max-w-5xl flex-1 p-6 md:p-10">{children}</main>
     </div>

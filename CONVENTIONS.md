@@ -23,7 +23,7 @@ smart-app/
    │  ├─ (auth)/login/  (auth)/signup/
    │  ├─ (app)/companies/…      # founder pages
    │  ├─ (admin)/admin/…        # admin pages
-   │  └─ api/                   # only: auth/[...all], documents/upload
+   │  └─ api/                   # only: auth/[...all], documents/upload, documents/[documentId]
    ├─ components/
    │  ├─ ui/                    # shadcn files, never edit
    │  └─ shared/                # our own components: buttons, fields, dialogs, page header
@@ -293,6 +293,7 @@ Every screen is built from the same parts, so a create page, an edit page and a 
 | -------------------------------------- | --------------------------------------------------- | ------------------------------------------------ |
 | Any button or button-styled link       | `AppButton` (`size="lg"` when it sits under fields) | `ui/button`                                      |
 | A labelled text, number or email field | `TextField`                                         | `ui/input` + `Field`, `FieldLabel`, `FieldError` |
+| A file to upload (drag and drop)       | `FileField`                                         | `TextField` with `type="file"`                   |
 | Pick one from a list in `options.ts`   | `ChoiceField`                                       | `ui/radio-group`, `FieldSet`, `FieldLegend`      |
 | "Are you sure?" before a delete        | `ConfirmDialog`                                     | `ui/alert-dialog`                                |
 | The heading at the top of a page       | `PageHeader`                                        | a hand-made `<h1>`                               |

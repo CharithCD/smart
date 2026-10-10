@@ -14,6 +14,8 @@ import {
 // (showing pendingLabel) until the action redirects away.
 // Pass children for a button that opens it, or open + onOpenChange to open it from
 // somewhere else, such as a menu item.
+// Pass onCloseAutoFocus when the opening button can disappear (a deleted row): call
+// event.preventDefault() and focus something else, or focus falls to <body>.
 type Props = {
   title: string;
   description: string;
@@ -24,6 +26,7 @@ type Props = {
   children?: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onCloseAutoFocus?: (event: Event) => void;
 };
 
 export function ConfirmDialog({
@@ -36,11 +39,15 @@ export function ConfirmDialog({
   children,
   open,
   onOpenChange,
+  onCloseAutoFocus,
 }: Props) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       {children && <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>}
-      <AlertDialogContent className="gap-6 p-6 data-[size=default]:max-w-[calc(100%-2rem)] sm:p-8 data-[size=default]:sm:max-w-md">
+      <AlertDialogContent
+        onCloseAutoFocus={onCloseAutoFocus}
+        className="gap-6 p-6 data-[size=default]:max-w-[calc(100%-2rem)] sm:p-8 data-[size=default]:sm:max-w-md"
+      >
         <div className="flex flex-col gap-2">
           <AlertDialogTitle className="text-xl font-bold text-neutral-900">
             {title}
