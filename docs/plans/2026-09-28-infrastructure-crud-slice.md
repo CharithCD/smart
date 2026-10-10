@@ -11,7 +11,7 @@
   - Every page except login and signup requires a session.
   - Users only see and change their own companies.
   - Each user gets a `role` (`founder` by default; `researcher` is set by hand for now).
-- **Company CRUD:** the parent record, whose shared profile holds stage, product type and operating mode.
+- **Company CRUD:** the parent record, whose shared fields hold stage, product type and operating mode.
 - **Infrastructure assessment CRUD:**
   - create a draft
   - edit it in the wizard (saved on every step)
@@ -38,8 +38,8 @@
 | Auth checks | `proxy.ts` only checks for the session cookie and redirects to `/login`. The real check is `requireUser()` in `lib/dal.ts` (`auth.api.getSession`), and `requireCompany(id)` also checks ownership. Every DAL function calls one of these, as the Next.js auth guide recommends. |
 | Login/signup forms | The same React Hook Form + Zod + shadcn `Field` pattern as every other form. They call Better Auth's browser client (`authClient.signIn.email` / `signUp.email`) and then `router.push('/companies')`. |
 | Completed assessments | **Read-only.** To redo one, start a new assessment, so the evaluation data (κ/MAE) never changes after the fact. Drafts can be edited and deleted, and completed ones can be deleted. |
-| Profile values | One set of IDs in `features/profile/options.ts`, taken from the engine's IDs (`prelaunch`, `saas`, `hybrid`, …). This fixes the prototype's "Pre-launch" vs `prelaunch` mismatch. |
-| Operating mode | Moves to the company profile (shared), not the infra wizard. |
+| Company values | One set of IDs in `features/company/options.ts`, taken from the engine's IDs (`prelaunch`, `saas`, `hybrid`, …). This fixes the prototype's "Pre-launch" vs `prelaunch` mismatch. |
+| Operating mode | Moves to the company (shared), not the infra wizard. |
 
 ## Routes
 
@@ -48,9 +48,9 @@
 | `/login`, `/signup` | Auth forms (public) | Client forms → Better Auth client |
 | `/api/auth/[...all]` | Better Auth endpoint | Route Handler (`toNextJsHandler(auth)`) |
 | `/companies` | My companies + "New company" + logout in the header | Server page |
-| `/companies/new` | Profile form | Client form → `createCompanyAction` |
-| `/companies/[companyId]` | Overview: profile + 4 module cards (only infra works) | Server page |
-| `/companies/[companyId]/edit` | Edit profile, delete company | Client form → `updateCompanyAction`, `deleteCompanyAction` |
+| `/companies/new` | Company form | Client form → `createCompanyAction` |
+| `/companies/[companyId]` | Overview: company details + 4 module cards (only infra works) | Server page |
+| `/companies/[companyId]/edit` | Edit or delete the company | Client form → `updateCompanyAction`, `deleteCompanyAction` |
 | `/companies/[companyId]/infrastructure` | List of assessments (date, status, score) + "Start new" | Server page → `startAssessmentAction` |
 | `/companies/[companyId]/infrastructure/[assessmentId]/edit` | Wizard: context → needs → ratings. **Drafts only**; a completed one redirects to results. | Client wizard → `saveDraftAction`, `completeAssessmentAction` |
 | `/companies/[companyId]/infrastructure/[assessmentId]` | Results: overall, physical/digital, gaps, criterion table, delete | Server page → `deleteAssessmentAction` |
@@ -70,7 +70,7 @@ model Company {
   owner         User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   name          String
   industry      String?
-  stage         String       // ids from features/profile/options.ts
+  stage         String       // ids from features/company/options.ts
   productType   String
   operatingMode String
   budgetLkr     Int?
@@ -110,7 +110,7 @@ src/
 ├─ components/shared/                 # page-header, choice-cards, step-nav, user-menu
 ├─ features/
 │  ├─ auth/        schema.ts  components/login-form.tsx  signup-form.tsx
-│  ├─ profile/     options.ts  schema.ts  data.ts  actions.ts  components/company-form.tsx
+│  ├─ company/     options.ts  schema.ts  data.ts  actions.ts  components/company-form.tsx
 │  └─ infrastructure/
 │     ├─ config/   criteria.ts  weights.ts  multipliers.ts  options.ts   # from prototype infrastructureLogic.ts
 │     ├─ engine/   assess.ts  assess.test.ts                            # pure: applicability, weights, score, gaps
@@ -168,7 +168,7 @@ export async function requireCompany(companyId: string) {
 | 2 | Scaffold Next.js 16 (TS, Tailwind, ESLint, App Router, `src/`, `@/*`) + Prettier + Vitest; `shadcn init` (Radix), theme from the prototype palette + Arimo | `npm run check` passes; the home page renders a themed button |
 | 3 | Prisma 7.10 (pinned) + `@prisma/adapter-pg` + `npx prisma dev`; `lib/db.ts` | `npx prisma studio` opens |
 | 4 | **Auth:** install Better Auth, `lib/auth.ts`, generate the auth tables into `schema.prisma`, add `role` + Company/Assessment models, migrate; `/api/auth/[...all]`; login/signup forms; `proxy.ts`; `lib/dal.ts`; logout in the header | Sign up → log in → refresh keeps you logged in → logout → `/companies` redirects to `/login` |
-| 5 | Company CRUD (profile form with RHF + Zod + shadcn Field) | Create, edit and delete a company. **A second account can't open the first account's company URL (404).** |
+| 5 | Company CRUD (company form with RHF + Zod + shadcn Field) | Create, edit and delete a company. **A second account can't open the first account's company URL (404).** |
 | 6 | Port the engine + config from `prototype/…/infrastructureLogic.ts`, typed with no `any`; tests using 3 fixed scenarios (remote SaaS, rural e-commerce, on-prem IoT) | `npm test` is green; the scores match the prototype for the same inputs |
 | 7 | Assessment CRUD + wizard + results page | Start → fill → refresh mid-way (the draft is kept) → complete → results → list shows it → delete works. A second account gets 404 on these URLs too. |
 | 8 | Small cleanups: loading/error states, empty states, `README` setup steps (`.env.example` with `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`) | A teammate can clone, run `npm i && npx prisma dev && npm run dev`, and use it |

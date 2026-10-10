@@ -1,6 +1,6 @@
 # Conventions: folders, naming and code style
 
-Everyone follows this file. If something isn't covered here, copy what `features/profile` does. If that doesn't answer it, ask in the group and add the answer here.
+Everyone follows this file. If something isn't covered here, copy what `features/company` does. If that doesn't answer it, ask in the group and add the answer here.
 
 **The rule behind all the others:** a teammate who has never seen a file should understand it in 10 seconds. When in doubt, write the plain, obvious version.
 
@@ -23,13 +23,13 @@ smart-app/
    │  ├─ (auth)/login/  (auth)/signup/
    │  ├─ (app)/companies/…      # founder pages
    │  ├─ (admin)/admin/…        # admin pages
-   │  └─ api/                   # only: auth/[...all], documents/upload
+   │  └─ api/                   # only: auth/[...all], documents/upload, documents/[documentId]
    ├─ components/
    │  ├─ ui/                    # shadcn files, never edit
-   │  └─ shared/                # our own components used by 2+ features
+   │  └─ shared/                # our own components: buttons, fields, dialogs, page header
    ├─ features/                 # ALL real code lives here
    │  ├─ auth/
-   │  ├─ profile/               # companies (the example every feature copies)
+   │  ├─ company/               # companies (the example every feature copies)
    │  ├─ knowledge/             # admin document uploads
    │  └─ infrastructure/  marketing/  compliance/  product/
    ├─ generated/                # Prisma client, git-ignored
@@ -60,22 +60,24 @@ When you create a new feature folder, add its name to `FEATURES` in `eslint.conf
 
 ### Where do I put…?
 
-| Thing                                     | Goes in                                             |
-| ----------------------------------------- | --------------------------------------------------- |
-| A new page / URL                          | `app/…/page.tsx`, a few lines that call `features/` |
-| A list of choices (stages, product types) | `features/<name>/options.ts`                        |
-| Form validation                           | `features/<name>/schema.ts`                         |
-| A database query                          | `features/<name>/data.ts`                           |
-| Something a form submits to               | `features/<name>/actions.ts`                        |
-| A component used by one feature           | `features/<name>/components/`                       |
-| A component used by two or more features  | `components/shared/`                                |
-| A shadcn component                        | `npx shadcn@latest add <name>` → `components/ui/`   |
-| A colour, font or radius                  | `app/globals.css` only                              |
+| Thing                                                        | Goes in                                                   |
+| ------------------------------------------------------------ | --------------------------------------------------------- |
+| A new page / URL                                             | `app/…/page.tsx`, a few lines that call `features/`       |
+| A list of choices (stages, product types)                    | `features/<name>/options.ts`                              |
+| Form validation                                              | `features/<name>/schema.ts`                               |
+| A database query                                             | `features/<name>/data.ts`                                 |
+| Something a form submits to                                  | `features/<name>/actions.ts`                              |
+| A component used by one feature                              | `features/<name>/components/`                             |
+| A component used by two or more features                     | `components/shared/`                                      |
+| A button, field, choice list, confirm dialog or page heading | the one in `components/shared/` (see "Shared components") |
+| A shadcn component                                           | `npx shadcn@latest add <name>` → `components/ui/`         |
+| A colour, font or radius                                     | `app/globals.css` only                                    |
 
 ### Import rules
 
-- A feature never imports from another feature. **Exception:** everyone may import `@/features/profile/options` and `@/features/profile/schema`, because the company profile is shared. _(Checked by ESLint.)_
+- A feature never imports from another feature. **Exception:** everyone may import `@/features/company/options` and `@/features/company/schema`, because the company is shared. _(Checked by ESLint.)_
 - Always import with `@/…`. Never use `../`. _(Checked by ESLint.)_ `./` for a file in the same folder is fine.
+- Pages and features never import the shadcn parts that have a shared version (see "Shared components"). _(Checked by ESLint.)_
 - Components never import `data.ts` or `lib/db.ts`. _(The `import "server-only"` line makes the build fail.)_
 - `engine/` and `config/` never import anything that touches the database, the network or the clock.
 - No `index.ts` files that re-export other files.
@@ -208,8 +210,8 @@ import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { CompanySchema, type CompanyInput } from "@/features/profile/schema";
-import { createCompanyAction, updateCompanyAction } from "@/features/profile/actions";
+import { CompanySchema, type CompanyInput } from "@/features/company/schema";
+import { createCompanyAction, updateCompanyAction } from "@/features/company/actions";
 
 type Props = { companyId?: string; defaultValues?: CompanyInput };
 
@@ -226,7 +228,11 @@ export function CompanyForm({ companyId, defaultValues }: Props) {
     }),
   );
 
-  return <form onSubmit={onSubmit}>{/* shadcn Field + Input + Select + Button */}</form>;
+  return (
+    <form onSubmit={onSubmit}>
+      {/* TextField + ChoiceField + AppButton from components/shared */}
+    </form>
+  );
 }
 ```
 
@@ -234,9 +240,9 @@ export function CompanyForm({ companyId, defaultValues }: Props) {
 
 ```tsx
 // app/(app)/companies/[companyId]/edit/page.tsx
-import { getCompany } from "@/features/profile/data";
-import { CompanySchema } from "@/features/profile/schema";
-import { CompanyForm } from "@/features/profile/components/company-form";
+import { getCompany } from "@/features/company/data";
+import { CompanySchema } from "@/features/company/schema";
+import { CompanyForm } from "@/features/company/components/company-form";
 
 export default async function EditCompanyPage({
   params,
@@ -279,6 +285,22 @@ export default async function EditCompanyPage({
 - Use theme colours: `bg-primary`, `text-muted-foreground`, `bg-accent`, or the brand palette (`bg-lilac-50`, `text-neutral-600`, `bg-lime-100`…).
 - Don't edit `components/ui/`. To change a look, wrap the component in `components/shared/`.
 
+### Shared components
+
+Every screen is built from the same parts, so a create page, an edit page and a dialog all look alike. Use these instead of the shadcn parts:
+
+| Need                                   | Use                                                 | Instead of                                       |
+| -------------------------------------- | --------------------------------------------------- | ------------------------------------------------ |
+| Any button or button-styled link       | `AppButton` (`size="lg"` when it sits under fields) | `ui/button`                                      |
+| A labelled text, number or email field | `TextField`                                         | `ui/input` + `Field`, `FieldLabel`, `FieldError` |
+| A file to upload (drag and drop)       | `FileField`                                         | `TextField` with `type="file"`                   |
+| Pick one from a list in `options.ts`   | `ChoiceField`                                       | `ui/radio-group`, `FieldSet`, `FieldLegend`      |
+| "Are you sure?" before a delete        | `ConfirmDialog`                                     | `ui/alert-dialog`                                |
+| The heading at the top of a page       | `PageHeader`                                        | a hand-made `<h1>`                               |
+| A form with an intro column            | `FormPanel`                                         | your own layout                                  |
+
+If none of these fits, add a new one to `components/shared/` and its shadcn part to `SHARED_ONLY` in `eslint.config.mjs`. Don't style a one-off inside a feature.
+
 **Data and secrets**
 
 - Money is an integer in LKR (`budgetLkr`).
@@ -293,6 +315,7 @@ export default async function EditCompanyPage({
 | Formatting, Tailwind class order        | Prettier (`npm run format` fixes it)               |
 | No `any`, unused code                   | TypeScript + ESLint                                |
 | No feature-to-feature imports, no `../` | ESLint `no-restricted-imports`                     |
+| Shared components instead of shadcn     | ESLint `no-restricted-imports` (`SHARED_ONLY`)     |
 | Components can't reach the database     | `import "server-only"`                             |
 | All of the above                        | `npm run check`, run by GitHub Actions on every PR |
 
@@ -300,7 +323,8 @@ export default async function EditCompanyPage({
 
 - One feature or fix per PR.
 - One teammate reviews it, and `npm run check` must pass.
-- The reviewer also checks three things tools can't:
+- The reviewer also checks four things tools can't:
   1. Are the files in the right folders?
   2. Do the names follow section 2?
   3. Does every `data.ts` function start with `requireUser`, `requireCompany` or `requireAdmin`?
+  4. Does the PR show a desktop and a phone screenshot of each changed screen, and does it look like the screens next to it?

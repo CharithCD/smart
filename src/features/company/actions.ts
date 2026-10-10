@@ -18,7 +18,13 @@ export async function createCompanyAction(input: CompanyInput) {
 }
 
 export async function updateCompanyAction(companyId: string, input: CompanyInput) {
-  await updateCompany(companyId, CompanySchema.parse(input));
+  const values = CompanySchema.parse(input);
+  // Same check as create, but the company may keep its own name.
+  const companies = await listCompanies();
+  if (companies.some((company) => company.id !== companyId && company.name === values.name)) {
+    return { error: "You already have a company with this name" };
+  }
+  await updateCompany(companyId, values);
   revalidatePath("/", "layout");
   redirect(`/companies/${companyId}`);
 }

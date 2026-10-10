@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { FieldGroup } from "@/components/ui/field";
+import { AppButton } from "@/components/shared/app-button";
+import { PageHeader } from "@/components/shared/page-header";
+import { TextField } from "@/components/shared/text-field";
 import { authClient } from "@/lib/auth-client";
 import { SignupSchema, type SignupInput } from "@/features/auth/schema";
 
@@ -29,46 +29,44 @@ export function SignupForm() {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Sign up</CardTitle>
-        <CardDescription>Create an account to assess your company</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit}>
-          <FieldGroup>
-            <Field data-invalid={!!errors.name}>
-              <FieldLabel htmlFor="name">Name</FieldLabel>
-              <Input id="name" autoComplete="name" {...form.register("name")} />
-              <FieldError errors={[errors.name]} />
-            </Field>
-            <Field data-invalid={!!errors.email}>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input id="email" type="email" autoComplete="email" {...form.register("email")} />
-              <FieldError errors={[errors.email]} />
-            </Field>
-            <Field data-invalid={!!errors.password}>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                autoComplete="new-password"
-                {...form.register("password")}
-              />
-              <FieldError errors={[errors.password]} />
-            </Field>
-            <Button type="submit" disabled={isSubmitting}>
-              Sign up
-            </Button>
-            <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
-              <Link href="/login" className="underline">
-                Log in
-              </Link>
-            </p>
-          </FieldGroup>
-        </form>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-8">
+      <PageHeader title="Sign up" description="Create an account to assess your company" />
+      <form onSubmit={onSubmit} noValidate>
+        <FieldGroup>
+          <TextField
+            id="name"
+            label="Name"
+            error={errors.name}
+            autoComplete="name"
+            {...form.register("name")}
+          />
+          <TextField
+            id="email"
+            label="Email"
+            error={errors.email}
+            type="email"
+            autoComplete="email"
+            {...form.register("email")}
+          />
+          <TextField
+            id="password"
+            label="Password"
+            error={errors.password}
+            type="password"
+            autoComplete="new-password"
+            {...form.register("password")}
+          />
+          <AppButton type="submit" size="lg" disabled={isSubmitting}>
+            {isSubmitting ? "Signing up…" : "Sign up"}
+          </AppButton>
+          <p className="flex flex-wrap items-center justify-center text-sm text-muted-foreground">
+            Already have an account?
+            <Link href="/login" className="inline-flex h-11 items-center px-2 underline">
+              Log in
+            </Link>
+          </p>
+        </FieldGroup>
+      </form>
+    </div>
   );
 }

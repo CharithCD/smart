@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { FieldGroup } from "@/components/ui/field";
+import { AppButton } from "@/components/shared/app-button";
+import { PageHeader } from "@/components/shared/page-header";
+import { TextField } from "@/components/shared/text-field";
 import { authClient } from "@/lib/auth-client";
 import { LoginSchema, type LoginInput } from "@/features/auth/schema";
 
@@ -29,41 +29,37 @@ export function LoginForm() {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Log in</CardTitle>
-        <CardDescription>Welcome back to Smart</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit}>
-          <FieldGroup>
-            <Field data-invalid={!!errors.email}>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input id="email" type="email" autoComplete="email" {...form.register("email")} />
-              <FieldError errors={[errors.email]} />
-            </Field>
-            <Field data-invalid={!!errors.password}>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                {...form.register("password")}
-              />
-              <FieldError errors={[errors.password]} />
-            </Field>
-            <Button type="submit" disabled={isSubmitting}>
-              Log in
-            </Button>
-            <p className="text-center text-sm text-muted-foreground">
-              No account yet?{" "}
-              <Link href="/signup" className="underline">
-                Sign up
-              </Link>
-            </p>
-          </FieldGroup>
-        </form>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-8">
+      <PageHeader title="Log in" description="Welcome back" />
+      <form onSubmit={onSubmit} noValidate>
+        <FieldGroup>
+          <TextField
+            id="email"
+            label="Email"
+            error={errors.email}
+            type="email"
+            autoComplete="email"
+            {...form.register("email")}
+          />
+          <TextField
+            id="password"
+            label="Password"
+            error={errors.password}
+            type="password"
+            autoComplete="current-password"
+            {...form.register("password")}
+          />
+          <AppButton type="submit" size="lg" disabled={isSubmitting}>
+            {isSubmitting ? "Logging in…" : "Log in"}
+          </AppButton>
+          <p className="flex flex-wrap items-center justify-center text-sm text-muted-foreground">
+            No account yet?
+            <Link href="/signup" className="inline-flex h-11 items-center px-2 underline">
+              Sign up
+            </Link>
+          </p>
+        </FieldGroup>
+      </form>
+    </div>
   );
 }

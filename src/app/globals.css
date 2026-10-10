@@ -45,6 +45,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -102,8 +103,9 @@
   --accent-foreground: var(--color-lilac-400);
   --destructive: oklch(0.577 0.245 27.325);
   --border: var(--color-neutral-300);
-  --input: var(--color-neutral-300);
-  --ring: var(--color-lilac-300);
+  /* Field edges and focus need 3:1 against white (WCAG 1.4.11); --border stays light for dividers */
+  --input: var(--color-neutral-550);
+  --ring: var(--color-lilac-400);
   --chart-1: var(--color-lilac-400);
   --chart-2: var(--color-lime-300);
   --chart-3: var(--color-blue-300);
@@ -117,7 +119,7 @@
   --sidebar-accent: var(--color-lilac-50);
   --sidebar-accent-foreground: var(--color-lilac-400);
   --sidebar-border: var(--color-neutral-300);
-  --sidebar-ring: var(--color-lilac-300);
+  --sidebar-ring: var(--color-lilac-400);
 }
 
 .dark {
@@ -163,5 +165,31 @@
   }
   html {
     @apply font-sans;
+  }
+
+  /* The parts the browser draws itself, in the brand colours */
+  ::selection {
+    @apply bg-lilac-200 text-neutral-900;
+  }
+  input,
+  textarea {
+    @apply caret-lilac-400;
+  }
+
+  /* shadcn controls are 32px, which is fine with a mouse but under the 44px finger-sized
+     minimum. On touch screens only, every button, field and menu item grows to 44px.
+     Buttons are matched by data-variant + data-size because a Button inside a trigger
+     (menu, dialog) gets the trigger's data-slot instead of "button". */
+  @media (pointer: coarse) {
+    [data-variant][data-size],
+    [data-slot="input"],
+    [data-slot="select-trigger"],
+    [data-slot="dropdown-menu-item"] {
+      min-height: 2.75rem;
+    }
+
+    [data-variant][data-size] {
+      min-width: 2.75rem;
+    }
   }
 }

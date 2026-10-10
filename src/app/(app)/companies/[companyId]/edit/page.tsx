@@ -1,6 +1,16 @@
-import { getCompany } from "@/features/profile/data";
-import { CompanySchema } from "@/features/profile/schema";
-import { CompanyForm } from "@/features/profile/components/company-form";
+import type { Metadata } from "next";
+import { PageHeader } from "@/components/shared/page-header";
+import { getCompany } from "@/features/company/data";
+import { CompanySchema } from "@/features/company/schema";
+import { CompanyForm } from "@/features/company/components/company-form";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/companies/[companyId]/edit">): Promise<Metadata> {
+  const { companyId } = await params;
+  const company = await getCompany(companyId);
+  return { title: `Edit ${company.name}` };
+}
 
 export default async function EditCompanyPage({
   params,
@@ -9,8 +19,7 @@ export default async function EditCompanyPage({
   const company = await getCompany(companyId);
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Edit {company.name}</h1>
-      {/* parse() turns the stored strings back into the form's types and drops id, ownerId… */}
+      <PageHeader title={`Edit ${company.name}`} />
       <CompanyForm companyId={company.id} defaultValues={CompanySchema.parse(company)} />
     </div>
   );
